@@ -10,17 +10,11 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async user(id: number): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder('user')
-      .where('user.id = :id', { id })
-      .getOne();
-  }
-
   async detail(id: number): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
+      .leftJoinAndSelect('user.quest', 'quest')
       .getOne();
   }
 

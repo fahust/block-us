@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { MaxLength, MinLength } from 'class-validator';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
@@ -15,6 +16,11 @@ import {
 
 @Entity()
 export class InvestEntity extends BaseEntity {
+  @ApiProperty()
+  @MinLength(42)
+  @MaxLength(42)
+  @Column()
+  address: string;
 
   @ApiProperty()
   @Column()
