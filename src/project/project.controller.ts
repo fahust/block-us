@@ -22,7 +22,7 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @UseGuards(AuthGuard)
-  @Get('detail')
+  @Get('')
   @ApiOperation({
     summary: 'Get current project with all join',
   })
@@ -30,7 +30,20 @@ export class ProjectController {
     status: HttpStatus.OK,
     type: ProjectEntity,
   })
-  projectDetail(@Request() req) {
-    return this.projectService.detail(req.project.id);
+  project(@Request() req) {
+    return this.projectService.get(req.project.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('')
+  @ApiOperation({
+    summary: 'Create project',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ProjectEntity,
+  })
+  create(@Request() req) {
+    return this.projectService.create(req.user.id);
   }
 }

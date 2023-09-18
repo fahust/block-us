@@ -22,7 +22,7 @@ export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
   @UseGuards(AuthGuard)
-  @Get('detail')
+  @Get('')
   @ApiOperation({
     summary: 'Get current news with all join',
   })
@@ -30,7 +30,7 @@ export class NewsController {
     status: HttpStatus.OK,
     type: NewsEntity,
   })
-  newsDetail(@Request() req) {
-    return this.newsService.detail(req.news.id);
+  get(@Request() req) {
+    return this.newsService.get(req.news.id);
   }
 }

@@ -10,7 +10,7 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async detail(id: number): Promise<UserEntity> {
+  async get(id: number): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })

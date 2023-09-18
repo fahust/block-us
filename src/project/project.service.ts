@@ -10,14 +10,7 @@ export class ProjectService {
     private projectRepository: Repository<ProjectEntity>,
   ) {}
 
-  async project(id: number): Promise<ProjectEntity> {
-    return this.projectRepository
-      .createQueryBuilder('project')
-      .where('project.id = :id', { id })
-      .getOne();
-  }
-
-  async detail(id: number): Promise<ProjectEntity> {
+  async get(id: number): Promise<ProjectEntity> {
     return this.projectRepository
       .createQueryBuilder('project')
       .where('project.id = :id', { id })

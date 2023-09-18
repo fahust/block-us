@@ -22,7 +22,7 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @UseGuards(AuthGuard)
-  @Get('detail')
+  @Get('')
   @ApiOperation({
     summary: 'Get current comment with all join',
   })
@@ -30,7 +30,7 @@ export class CommentController {
     status: HttpStatus.OK,
     type: CommentEntity,
   })
-  commentDetail(@Request() req) {
-    return this.commentService.detail(req.comment.id);
+  get(@Request() req) {
+    return this.commentService.get(req.comment.id);
   }
 }
