@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MaxLength, MinLength } from 'class-validator';
+import { BaseEntity } from 'src/helpers/entity/base.entity';
 import {
   Entity,
   Column,
@@ -11,10 +12,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class UserEntity {
-  @ApiProperty()
-  @PrimaryGeneratedColumn()
-  id: number;
+export class UserEntity extends BaseEntity  {
 
   @ApiProperty()
   @MinLength(42)
@@ -37,8 +35,4 @@ export class UserEntity {
   @ApiProperty()
   @Column()
   lastName: string;
-
-  @ApiProperty()
-  @Column({ default: true })
-  isActive: boolean;
 }

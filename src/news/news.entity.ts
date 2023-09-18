@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MaxLength, MinLength } from 'class-validator';
+import { BaseEntity } from 'src/helpers/entity/base.entity';
 import {
   Entity,
   Column,
@@ -11,10 +11,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class NewsEntity {
-  @ApiProperty()
-  @PrimaryGeneratedColumn()
-  id: number;
+export class NewsEntity extends BaseEntity {
 
   @ApiProperty()
   @Column()
@@ -22,9 +19,5 @@ export class NewsEntity {
 
   @ApiProperty()
   @Column()
-  password: string;
-
-  @ApiProperty()
-  @Column({ default: true })
-  isActive: boolean;
+  content: string;
 }
