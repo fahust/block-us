@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { InvestEntity } from 'src/invest/invest.entity';
@@ -10,6 +10,7 @@ import { Exclude } from 'class-transformer';
 @Entity()
 export class UserEntity extends BaseEntity {
   @ApiProperty()
+  @IsNotEmpty()
   @MinLength(42)
   @MaxLength(42)
   @Column()
@@ -17,13 +18,21 @@ export class UserEntity extends BaseEntity {
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
   @Column()
   name: string;
 
   @ApiProperty()
+  @IsUrl()
+  @IsNotEmpty()
+  @Column()
+  image: string;
+
+  @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   @MinLength(10)
   @MaxLength(50)
   @Exclude({ toPlainOnly: true })
@@ -37,6 +46,7 @@ export class UserEntity extends BaseEntity {
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
   @Column()
