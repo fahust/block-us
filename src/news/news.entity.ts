@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
+import { ProjectEntity } from 'src/project/project.entity';
 import {
   Entity,
   Column,
+  ManyToOne,
   PrimaryGeneratedColumn,
   OneToMany,
   OneToOne,
@@ -20,4 +22,11 @@ export class NewsEntity extends BaseEntity {
   @ApiProperty()
   @Column()
   content: string;
+
+  @ApiProperty()
+  @Column()
+  @ManyToOne(() => ProjectEntity, (project) => project.comments, {
+    orphanedRowAction: 'soft-delete',
+  })
+  project: ProjectEntity;
 }
