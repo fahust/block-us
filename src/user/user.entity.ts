@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsEthereumAddress, IsNotEmpty, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { InvestEntity } from 'src/invest/invest.entity';
@@ -10,9 +10,7 @@ import { Exclude } from 'class-transformer';
 @Entity()
 export class UserEntity extends BaseEntity {
   @ApiProperty()
-  @IsNotEmpty()
-  @MinLength(42)
-  @MaxLength(42)
+  @IsEthereumAddress()
   @Column()
   address: string;
 
