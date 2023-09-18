@@ -43,7 +43,7 @@ export class ProjectController {
     status: HttpStatus.OK,
     type: ProjectEntity,
   })
-  create(@Request() req) {
-    return this.projectService.create(req.user.id);
+  create(@Request() req, @Body() project: ProjectEntity) {
+    return this.projectService.create(req.user, project);
   }
 }

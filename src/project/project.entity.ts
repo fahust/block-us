@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsUrl,
   MaxLength,
@@ -20,7 +21,7 @@ export class ProjectEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  @Column()
+  @Column({ unique: true })
   title: string;
 
   @ApiProperty()
@@ -34,7 +35,8 @@ export class ProjectEntity extends BaseEntity {
   @ApiProperty()
   @IsUrl()
   @IsNotEmpty()
-  @Column()
+  @IsOptional()
+  @Column({ nullable: true })
   image: string;
 
   @ApiProperty()
@@ -43,25 +45,24 @@ export class ProjectEntity extends BaseEntity {
   @MinLength(10)
   @MaxLength(50)
   @Exclude({ toPlainOnly: true })
-  @Column({ select: false })
   @Column()
   password: string;
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
+  @IsOptional()
   @OneToMany(() => CommentEntity, (comment) => comment.project, {
     cascade: true,
     eager: true,
   })
   comments: CommentEntity;
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
+  @IsOptional()
   @ManyToOne(() => UserEntity, (user) => user.projects)
   owner: UserEntity;
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
+  @IsOptional()
   @OneToMany(() => InvestEntity, (invest) => invest.project)
   invests: InvestEntity[];
 }

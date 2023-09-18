@@ -38,10 +38,16 @@ export class AuthService {
   }
 
   async signUp(signInDto: SignUpDto): Promise<UpdateResult> {
-    const { name, password, lastName } = signInDto;
+    const { name, password, lastName, address, email } = signInDto;
     const user = await this.userRepository.findOneBy({ name });
     if (user) throw new UnauthorizedException('Already exist');
     const hash = bcrypt.hashSync(password, +this.saltOrRounds);
-    return this.userRepository.insert({ name, password: hash, lastName });
+    return this.userRepository.insert({
+      name,
+      password: hash,
+      lastName,
+      address,
+      email,
+    });
   }
 }

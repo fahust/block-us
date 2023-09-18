@@ -9,7 +9,7 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 export class InvestEntity extends BaseEntity {
   @ApiProperty()
   @IsEthereumAddress()
-  @Column()
+  @Column({ unique: true })
   address: string;
 
   @ApiProperty()
@@ -18,13 +18,11 @@ export class InvestEntity extends BaseEntity {
   @Column()
   value: number;
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @ManyToOne(() => ProjectEntity, (project) => project.invests)
   project: ProjectEntity;
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @ManyToOne(() => UserEntity, (user) => user.invests)
   owner: UserEntity;
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEthereumAddress, IsNotEmpty, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsEthereumAddress, IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { InvestEntity } from 'src/invest/invest.entity';
@@ -11,7 +11,7 @@ import { Exclude } from 'class-transformer';
 export class UserEntity extends BaseEntity {
   @ApiProperty()
   @IsEthereumAddress()
-  @Column()
+  @Column({ unique: true })
   address: string;
 
   @ApiProperty()
@@ -19,13 +19,14 @@ export class UserEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @ApiProperty()
   @IsUrl()
   @IsNotEmpty()
-  @Column()
+  @IsOptional()
+  @Column({ nullable: true })
   image: string;
 
   @ApiProperty()
@@ -34,12 +35,12 @@ export class UserEntity extends BaseEntity {
   @MinLength(10)
   @MaxLength(50)
   @Exclude({ toPlainOnly: true })
-  @Column({ select: false })
+  @Column()
   password: string;
 
   @ApiProperty()
   @IsEmail()
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @ApiProperty()
@@ -50,18 +51,15 @@ export class UserEntity extends BaseEntity {
   @Column()
   lastName: string;
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @ManyToMany(() => CommentEntity, (comment) => comment.likes)
   comments: CommentEntity[];
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @OneToMany(() => ProjectEntity, (project) => project.owner)
   projects: ProjectEntity[];
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @OneToMany(() => InvestEntity, (invest) => invest.owner)
   invests: InvestEntity[];
 }
