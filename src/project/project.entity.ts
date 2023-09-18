@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { MaxLength, MinLength } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
+import { InvestEntity } from 'src/invest/invest.entity';
 import { UserEntity } from 'src/user/user.entity';
 import {
   Entity,
@@ -36,4 +37,9 @@ export class ProjectEntity extends BaseEntity {
   @Column()
   @ManyToOne(() => UserEntity, (user) => user.projects)
   owner: UserEntity;
+
+  @ApiProperty()
+  @Column()
+  @OneToMany(() => InvestEntity, (invest) => invest.project)
+  invests: InvestEntity[];
 }
