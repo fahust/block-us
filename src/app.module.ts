@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
 import { NewsModule } from './news/news.module';
 import { CommentModule } from './comment/comment.module';
+import { InvestModule } from './invest/invest.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CommentModule } from './comment/comment.module';
     ProjectModule,
     NewsModule,
     CommentModule,
+    InvestModule,
   ],
   controllers: [],
   providers: [],
