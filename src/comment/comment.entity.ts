@@ -42,7 +42,7 @@ export class CommentEntity extends BaseEntity {
 
   @ApiProperty()
   @Column()
-  @ManyToMany(() => UserEntity, (user) => user.likes, {
+  @ManyToMany(() => UserEntity, (user) => user.comments, {
     cascade: true,
     eager: true,
   })
