@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MaxLength, MinLength } from 'class-validator';
+import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import {
   Entity,
   Column,
+  ManyToMany,
   PrimaryGeneratedColumn,
   OneToMany,
   OneToOne,
@@ -12,8 +14,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class UserEntity extends BaseEntity  {
-
+export class UserEntity extends BaseEntity {
   @ApiProperty()
   @MinLength(42)
   @MaxLength(42)
@@ -35,4 +36,9 @@ export class UserEntity extends BaseEntity  {
   @ApiProperty()
   @Column()
   lastName: string;
+
+  @ApiProperty()
+  @Column()
+  @ManyToMany(() => CommentEntity, (comment) => comment.likes)
+  likes: CommentEntity[];
 }
