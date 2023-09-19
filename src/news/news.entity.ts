@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -35,6 +36,11 @@ export class NewsEntity extends BaseEntity {
   @IsOptional()
   @Column({ nullable: true })
   image: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  @Column({ default: true })
+  public: boolean;
 
   @ApiProperty({ type: 'object' })
   @ManyToOne(() => ProjectEntity, (project) => project.comments, {
