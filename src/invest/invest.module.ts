@@ -3,9 +3,10 @@ import { InvestController } from './invest.controller';
 import { InvestService } from './invest.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InvestEntity } from './invest.entity';
+import { ProjectModule } from 'src/project/project.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([InvestEntity])],
+  imports: [TypeOrmModule.forFeature([InvestEntity]), ProjectModule],
   controllers: [InvestController],
   providers: [InvestService],
   exports: [InvestService],
