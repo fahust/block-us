@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEthereumAddress,
@@ -25,17 +25,19 @@ export class InvestEntity extends BaseEntity {
   @Column()
   value: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsBoolean()
   @IsOptional()
   @Column({ default: false })
   validation: boolean;
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @ManyToOne(() => ProjectEntity, (project) => project.invests)
   project: Omit<ProjectEntity, 'password'>;
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @ManyToOne(() => UserEntity, (user) => user.invests)
   owner: UserEntity;
 }
