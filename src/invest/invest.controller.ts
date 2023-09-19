@@ -44,8 +44,23 @@ export class InvestController {
     status: HttpStatus.OK,
     type: InvestEntity,
   })
-  investsOfProject(@Param() { projectId }): Promise<number> {
+  investsOfProject(
+    @Param() { projectId },
+  ): Promise<Omit<InvestEntity, 'owner' | 'project'>[]> {
     return this.investService.investsOfProject(projectId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('project/value/:projectId')
+  @ApiOperation({
+    summary: 'Get current value invests from a project',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: InvestEntity,
+  })
+  investsValueOfProject(@Param() { projectId }): Promise<number> {
+    return this.investService.investsValueOfProject(projectId);
   }
 
   @UseGuards(AuthGuard)

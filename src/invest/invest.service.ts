@@ -52,12 +52,24 @@ export class InvestService {
     });
   }
 
-  async investsOfProject(projectId: number): Promise<number> {
+  async investsOfProject(
+    projectId: number,
+  ): Promise<Omit<InvestEntity, 'owner' | 'project'>[]> {
     const invests = await this.investRepository
       .createQueryBuilder('invest')
       .leftJoinAndSelect('invest.project', 'project')
       .where('project.id = :projectId', { projectId })
+      .andWhere('invest.validation = :validation', { validation: true })
       .getMany();
+
+    return invests.map((i) => {
+      const { owner: _, project: __, ...invest } = i;
+      return invest;
+    });
+  }
+
+  async investsValueOfProject(projectId: number): Promise<number> {
+    const invests = await this.investsOfProject(projectId);
 
     return invests.reduce(
       (accumulator, currentValue) => accumulator + currentValue.value,
