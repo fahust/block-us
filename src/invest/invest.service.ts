@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InvestEntity } from './invest.entity';
@@ -34,7 +40,7 @@ export class InvestService {
     });
   }
 
-  async myInvests(ownerId: number) {
+  async myInvests(ownerId: number): Promise<Omit<InvestEntity, 'owner'>[]> {
     const invests = await this.investRepository
       .createQueryBuilder('invest')
       .leftJoinAndSelect('invest.owner', 'owner')
@@ -44,6 +50,19 @@ export class InvestService {
       const { owner: _, ...invest } = i;
       return invest;
     });
+  }
+
+  async investsOfProject(projectId: number) {
+    const invests = await this.investRepository
+      .createQueryBuilder('invest')
+      .leftJoinAndSelect('invest.project', 'project')
+      .where('project.id = :projectId', { projectId })
+      .getMany();
+      
+    return invests.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.value,
+      0,
+    );
   }
 
   async save(invest: InvestEntity): Promise<InvestEntity> {
