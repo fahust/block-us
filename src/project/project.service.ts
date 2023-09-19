@@ -48,6 +48,13 @@ export class ProjectService {
     });
   }
 
+  async isInvest(userId:number,projectId:number){
+    const projects = await this.projectRepository
+      .createQueryBuilder('project')
+      .where('project.id = :projectId', { projectId })
+      .getOneOrFail();
+  }
+
   async create(
     owner: UserEntity,
     project: ProjectEntity,
