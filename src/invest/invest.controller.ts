@@ -31,7 +31,7 @@ export class InvestController {
     status: HttpStatus.OK,
     type: InvestEntity,
   })
-  myInvests(@Request() req) {
+  myInvests(@Request() req): Promise<Omit<InvestEntity, 'owner'>[]> {
     return this.investService.myInvests(req.user.id);
   }
 
@@ -44,7 +44,7 @@ export class InvestController {
     status: HttpStatus.OK,
     type: InvestEntity,
   })
-  investsOfProject(@Param() { projectId }) {
+  investsOfProject(@Param() { projectId }): Promise<number> {
     return this.investService.investsOfProject(projectId);
   }
 
@@ -57,7 +57,7 @@ export class InvestController {
     status: HttpStatus.OK,
     type: InvestEntity,
   })
-  get(@Param() { id }) {
+  get(@Param() { id }): Promise<InvestEntity> {
     return this.investService.get(id);
   }
 
@@ -70,7 +70,11 @@ export class InvestController {
     status: HttpStatus.OK,
     type: InvestEntity,
   })
-  create(@Request() req, @Body() invest: InvestEntity, @Param() { projectId }) {
+  create(
+    @Request() req,
+    @Body() invest: InvestEntity,
+    @Param() { projectId },
+  ): Promise<InvestEntity> {
     return this.investService.create(req.user, invest, projectId);
   }
 }

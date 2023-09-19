@@ -32,7 +32,10 @@ export class ProjectController {
     status: HttpStatus.OK,
     type: ProjectEntity,
   })
-  search(@Param() { searchTerm }, @Query() { limit = 0, skip = 0 }) {
+  search(
+    @Param() { searchTerm },
+    @Query() { limit = 0, skip = 0 },
+  ): Promise<Omit<ProjectEntity, 'password'>[]> {
     return this.projectService.search(searchTerm, limit, skip);
   }
 
@@ -45,7 +48,10 @@ export class ProjectController {
     status: HttpStatus.OK,
     type: ProjectEntity,
   })
-  isOwner(@Request() req, @Param() { id }) {
+  isOwner(
+    @Request() req,
+    @Param() { id },
+  ): Promise<Omit<ProjectEntity, 'password' | 'owner'>> {
     return this.projectService.isOwner(req.user.id, id);
   }
 
@@ -58,7 +64,7 @@ export class ProjectController {
     status: HttpStatus.OK,
     type: ProjectEntity,
   })
-  project(@Param() { id }) {
+  project(@Param() { id }): Promise<Omit<ProjectEntity, 'password'>> {
     return this.projectService.get(id);
   }
 
@@ -71,7 +77,10 @@ export class ProjectController {
     status: HttpStatus.OK,
     type: ProjectEntity,
   })
-  create(@Request() req, @Body() project: ProjectEntity) {
+  create(
+    @Request() req,
+    @Body() project: ProjectEntity,
+  ): Promise<Omit<ProjectEntity, 'password'>> {
     return this.projectService.create(req.user, project);
   }
 }
