@@ -3,7 +3,9 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -22,16 +24,29 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @UseGuards(AuthGuard)
-  @Get('')
+  @Get('search/:searchTerm')
   @ApiOperation({
-    summary: 'Get current project with all join',
+    summary: 'Search project with all join',
   })
   @ApiResponse({
     status: HttpStatus.OK,
     type: ProjectEntity,
   })
-  project(@Request() req) {
-    return this.projectService.get(req.project.id);
+  search(@Param() { searchTerm }, @Query() { limit = 0, skip = 0 }) {
+    return this.projectService.search(searchTerm, limit, skip);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Get project with all join',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ProjectEntity,
+  })
+  project(@Param() { id }) {
+    return this.projectService.get(id);
   }
 
   @UseGuards(AuthGuard)
