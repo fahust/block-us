@@ -33,6 +33,18 @@ export class InvestService {
     });
   }
 
+  async myInvests(ownerId: number) {
+    const invests = await this.investRepository
+      .createQueryBuilder('invest')
+      .leftJoinAndSelect('invest.owner', 'owner')
+      .where('owner.id = :ownerId', { ownerId })
+      .getMany();
+    return invests.map((i) => {
+      const { owner: _, ...invest } = i;
+      return invest;
+    });
+  }
+
   async save(invest: InvestEntity): Promise<InvestEntity> {
     try {
       return await this.investRepository.save(invest);
