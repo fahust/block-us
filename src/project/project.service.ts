@@ -61,6 +61,25 @@ export class ProjectService {
     return isInvest ? true : false;
   }
 
+  async isOwner(userId: number, projectId: number) {
+    try {
+      const {
+        password: _,
+        owner: { password: __ },
+        ...newProject
+      } = await this.projectRepository
+        .createQueryBuilder('project')
+        .leftJoinAndSelect('project.owner', 'owner')
+        .where('project.id = :projectId', { projectId })
+        .andWhere('owner.id = :userId', { userId })
+        .getOneOrFail();
+
+      return newProject;
+    } catch (error) {
+      throw new HttpException(JSON.stringify(error), HttpStatus.NOT_FOUND);
+    }
+  }
+
   async create(
     owner: UserEntity,
     project: ProjectEntity,
