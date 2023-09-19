@@ -30,7 +30,7 @@ export class ProjectController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: ProjectEntity,
+    type: [ProjectEntity],
   })
   search(
     @Param() { searchTerm },
