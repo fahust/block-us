@@ -6,7 +6,10 @@ import { InvestEntity } from './invest.entity';
 import { ProjectModule } from 'src/project/project.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([InvestEntity]), ProjectModule],
+  imports: [
+    TypeOrmModule.forFeature([InvestEntity]),
+    forwardRef(() => ProjectModule),
+  ],
   controllers: [InvestController],
   providers: [InvestService],
   exports: [InvestService],
