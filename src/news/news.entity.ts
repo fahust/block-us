@@ -8,7 +8,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { BaseEntity } from 'src/helpers/entity/base.entity';
+import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { Entity, Column, ManyToOne } from 'typeorm';
 

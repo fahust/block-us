@@ -2,19 +2,20 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
 import { NewsModule } from './news/news.module';
 import { CommentModule } from './comment/comment.module';
 import { InvestModule } from './invest/invest.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { HelperModule } from './helper/module/helper.module';
+import { AuthenticationModule } from './authentication/module/authentication.module';
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      imports: [ ConfigModule],
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
         host: 'localhost',
@@ -31,11 +32,12 @@ import { ScheduleModule } from '@nestjs/schedule';
       inject: [ConfigService],
     }),
     UserModule,
-    AuthModule,
     ProjectModule,
     NewsModule,
     CommentModule,
     InvestModule,
+    HelperModule,
+    AuthenticationModule,
   ],
   controllers: [],
   providers: [],

@@ -10,7 +10,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
-import { BaseEntity } from 'src/helpers/entity/base.entity';
+import { BaseEntity } from 'src/helper/entity/base.entity';
 import { InvestEntity } from 'src/invest/invest.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
@@ -20,7 +20,7 @@ export class ProjectEntity extends BaseEntity {
   @ApiProperty()
   @IsEthereumAddress()
   @Column({ unique: true })
-  address: string;
+  walletAddress: string;
 
   @ApiProperty()
   @IsString()

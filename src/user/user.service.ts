@@ -14,7 +14,13 @@ export class UserService {
     return this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
-      .leftJoinAndSelect('user.quest', 'quest')
+      .getOne();
+  }
+
+  async findByAddress(walletAddress: string): Promise<UserEntity> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.walletAddress = :walletAddress', { walletAddress })
       .getOne();
   }
 

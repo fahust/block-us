@@ -10,10 +10,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../authentication/guard/auth.guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProjectEntity } from './project.entity';
 import { Interval } from '@nestjs/schedule';
+import { GetUser } from 'src/authentication/decorator/get-user.decorator';
+import { UserEntity } from 'src/user/user.entity';
 
 @ApiHeader({ name: 'authorization', description: 'Bearer ...' })
 @ApiTags('Project')
@@ -79,6 +81,7 @@ export class ProjectController {
     type: ProjectEntity,
   })
   create(
+    @GetUser() user: UserEntity,
     @Request() req,
     @Body() project: ProjectEntity,
   ): Promise<Omit<ProjectEntity, 'password'>> {
@@ -87,7 +90,7 @@ export class ProjectController {
   
   @Interval(1000)
   checkTransactionIsValidate() {
-    console.log('test')
+    //console.log('test')
   }
   
 

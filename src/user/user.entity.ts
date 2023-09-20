@@ -1,7 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsEthereumAddress, IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEthereumAddress,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
-import { BaseEntity } from 'src/helpers/entity/base.entity';
+import { BaseEntity } from 'src/helper/entity/base.entity';
 import { InvestEntity } from 'src/invest/invest.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { Entity, Column, ManyToMany, OneToMany } from 'typeorm';
@@ -12,14 +21,15 @@ export class UserEntity extends BaseEntity {
   @ApiProperty()
   @IsEthereumAddress()
   @Column({ unique: true })
-  address: string;
+  walletAddress: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   name: string;
 
   @ApiPropertyOptional()
@@ -29,26 +39,29 @@ export class UserEntity extends BaseEntity {
   @Column({ nullable: true })
   image: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
   @MaxLength(50)
   @Exclude({ toPlainOnly: true })
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsEmail()
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   email: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  @Column()
+  @Column({ nullable: true })
   lastName: string;
 
   @ApiPropertyOptional({ type: 'object' })
