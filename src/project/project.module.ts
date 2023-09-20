@@ -5,11 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectEntity } from './project.entity';
 import { ConfigModule } from '@nestjs/config';
 import { InvestModule } from 'src/invest/invest.module';
+import { HelperModule } from 'src/helper/module/helper.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProjectEntity]),
     ConfigModule,
+    HelperModule,
     forwardRef(() => InvestModule),
   ],
   controllers: [ProjectController],

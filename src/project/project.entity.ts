@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
+  IsBoolean,
   IsEthereumAddress,
   IsNotEmpty,
   IsOptional,
@@ -21,6 +22,11 @@ export class ProjectEntity extends BaseEntity {
   @IsEthereumAddress()
   @Column({ unique: true })
   walletAddress: string;
+
+  @ApiProperty()
+  @IsString()
+  @Column({ unique: true })
+  txHash: string;
 
   @ApiProperty()
   @IsString()
@@ -60,6 +66,11 @@ export class ProjectEntity extends BaseEntity {
   @IsOptional()
   @Column({ nullable: true })
   image: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  @Column({ default: false })
+  deployed: boolean;
 
   @ApiProperty()
   @IsString()
