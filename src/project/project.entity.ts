@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
   IsBoolean,
+  IsEnum,
   IsEthereumAddress,
   IsNotEmpty,
   IsOptional,
@@ -12,6 +13,7 @@ import {
 } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helper/entity/base.entity';
+import { ChainId } from 'src/helper/enum/network.enum';
 import { InvestEntity } from 'src/invest/invest.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
@@ -37,6 +39,11 @@ export class ProjectEntity extends BaseEntity {
   @IsString()
   @Column({ unique: true })
   hashProxy: string;
+
+  @ApiProperty()
+  @IsEnum(ChainId)
+  @Column()
+  chainId: ChainId;
 
   @ApiProperty()
   @IsString()

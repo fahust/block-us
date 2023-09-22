@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEnum,
   IsEthereumAddress,
   IsNumber,
   IsOptional,
@@ -9,6 +10,7 @@ import {
   NotEquals,
 } from 'class-validator';
 import { BaseEntity } from 'src/helper/entity/base.entity';
+import { ChainId } from 'src/helper/enum/network.enum';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { Entity, Column, ManyToOne } from 'typeorm';
@@ -31,6 +33,11 @@ export class InvestEntity extends BaseEntity {
   @IsOptional()
   @Column({ default: false })
   validation: boolean;
+
+  @ApiProperty()
+  @IsEnum(ChainId)
+  @Column()
+  chainId: ChainId;
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
