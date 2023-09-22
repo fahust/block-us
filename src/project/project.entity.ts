@@ -2,13 +2,19 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
   IsBoolean,
+  IsDate,
   IsEnum,
   IsEthereumAddress,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUrl,
+  Max,
+  MaxDate,
   MaxLength,
+  Min,
+  MinDate,
   MinLength,
 } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
@@ -90,6 +96,47 @@ export class ProjectEntity extends BaseEntity {
   @Column({ default: false })
   deployed: boolean;
 
+  @ApiProperty()
+  @IsBoolean()
+  @Column()
+  pausable: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
+  @Column()
+  rulesModifiable: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
+  @Column()
+  voteToWithdraw: boolean;
+
+  @ApiProperty()
+  @IsNumber()
+  @Column()
+  dayToWithdraw: number;
+
+  @ApiProperty()
+  @IsDate()
+  @MinDate(new Date())
+  @MaxDate(addYears(new Date(), 1))
+  @Column()
+  startFundraising: Date;
+
+  @ApiProperty()
+  @IsNumber()
+  @MinDate(new Date())
+  @MaxDate(addYears(new Date(), 1))
+  @Column()
+  endFundraising: Date;
+
+  @ApiProperty()
+  @IsNumber()
+  @Min(1)
+  @Max(1000000000)
+  @Column()
+  maxSupply: number;
+
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
   @OneToMany(() => CommentEntity, (comment) => comment.project, {
@@ -107,4 +154,10 @@ export class ProjectEntity extends BaseEntity {
   @IsOptional()
   @OneToMany(() => InvestEntity, (invest) => invest.project)
   invests: InvestEntity[];
+}
+
+function addYears(date, years) {
+  const dateCopy = new Date(date);
+  dateCopy.setFullYear(dateCopy.getFullYear() + years);
+  return dateCopy;
 }
