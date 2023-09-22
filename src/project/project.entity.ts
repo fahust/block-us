@@ -21,19 +21,29 @@ export class ProjectEntity extends BaseEntity {
   @ApiProperty()
   @IsEthereumAddress()
   @Column({ unique: true })
-  walletAddress: string;
+  walletAddressToken: string;
+
+  @ApiProperty()
+  @IsEthereumAddress()
+  @Column({ unique: true })
+  walletAddressProxy: string;
 
   @ApiProperty()
   @IsString()
   @Column({ unique: true })
-  txHash: string;
+  hashToken: string;
+
+  @ApiProperty()
+  @IsString()
+  @Column({ unique: true })
+  hashProxy: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  @Column({ unique: true })
+  @Column()
   title: string;
 
   @ApiProperty()
@@ -67,19 +77,11 @@ export class ProjectEntity extends BaseEntity {
   @Column({ nullable: true })
   image: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsBoolean()
   @Column({ default: false })
   deployed: boolean;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(10)
-  @MaxLength(50)
-  @Exclude({ toPlainOnly: true })
-  @Column()
-  password: string;
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()

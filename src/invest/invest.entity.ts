@@ -4,6 +4,7 @@ import {
   IsEthereumAddress,
   IsNumber,
   IsOptional,
+  IsString,
   Min,
   NotEquals,
 } from 'class-validator';
@@ -15,9 +16,9 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 @Entity()
 export class InvestEntity extends BaseEntity {
   @ApiProperty()
-  @IsEthereumAddress()
+  @IsString()
   @Column({ unique: true })
-  address: string;
+  hash: string;
 
   @ApiProperty()
   @IsNumber()
@@ -34,7 +35,7 @@ export class InvestEntity extends BaseEntity {
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
   @ManyToOne(() => ProjectEntity, (project) => project.invests)
-  project: Omit<ProjectEntity, 'password'>;
+  project: ProjectEntity;
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()

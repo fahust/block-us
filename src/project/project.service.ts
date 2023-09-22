@@ -34,20 +34,19 @@ export class ProjectService {
     this.metamaskPrivateKey = this.configService.get('METAMASK_PRIVATE_KEY');
   }
 
-  async get(id: number): Promise<Omit<ProjectEntity, 'password'>> {
-    const { password: _, ...project } = await this.projectRepository
+  async get(id: number): Promise<ProjectEntity> {
+    return this.projectRepository
       .createQueryBuilder('project')
       .where('project.id = :id', { id })
       .getOne();
-    return project;
   }
 
   async search(
     searchTerm: number,
     limit: number,
     skip: number,
-  ): Promise<Omit<ProjectEntity, 'password'>[]> {
-    const projects = await this.projectRepository
+  ): Promise<ProjectEntity[]> {
+    return this.projectRepository
       .createQueryBuilder('project')
       .where('project.description like :searchTerm', {
         searchTerm: `%${searchTerm}%`,
@@ -58,11 +57,6 @@ export class ProjectService {
       .limit(limit)
       .skip(skip)
       .getMany();
-
-    return projects.map((p) => {
-      const { password: _, ...project } = p;
-      return project;
-    });
   }
 
   async isInvest(userId: number, projectId: number): Promise<Boolean> {
@@ -83,18 +77,12 @@ export class ProjectService {
     projectId: number,
   ): Promise<Omit<ProjectEntity, 'password' | 'owner'>> {
     try {
-      const {
-        password: _,
-        owner: { password: __ },
-        ...newProject
-      } = await this.projectRepository
+      return this.projectRepository
         .createQueryBuilder('project')
         .leftJoinAndSelect('project.owner', 'owner')
         .where('project.id = :projectId', { projectId })
         .andWhere('owner.id = :userId', { userId })
         .getOneOrFail();
-
-      return newProject;
     } catch (error) {
       throw new HttpException(JSON.stringify(error), HttpStatus.NOT_FOUND);
     }
@@ -103,15 +91,11 @@ export class ProjectService {
   async create(
     owner: UserEntity,
     project: ProjectEntity,
-  ): Promise<Omit<ProjectEntity, 'password'>> {
-    const hash = bcrypt.hashSync(project.password, +this.saltOrRounds);
-    const { password: _, ...newProject } = await this.save({
+  ): Promise<ProjectEntity> {
+    return this.save({
       ...project,
       owner,
-      password: hash,
     });
-
-    return newProject;
   }
 
   async save(project: ProjectEntity): Promise<ProjectEntity> {
@@ -139,17 +123,27 @@ export class ProjectService {
       await queryRunner.startTransaction();
       try {
         for (const project of projects) {
-          const tx = await this.helperBlockchainService.getStatusTransaction(
-            this.alchemyKey,
-            project.txHash,
-          );
+          const txToken =
+            await this.helperBlockchainService.getStatusTransaction(
+              this.alchemyKey,
+              project.hashToken,
+            );
+
+          const txProxy =
+            await this.helperBlockchainService.getStatusTransaction(
+              this.alchemyKey,
+              project.hashProxy,
+            );
+
           if (
-            !tx ||
-            tx.contractAddress !== project.walletAddress ||
+            !txToken ||
+            !txProxy ||
+            txToken.contractAddress !== project.walletAddressToken ||
+            txProxy.contractAddress !== project.walletAddressProxy ||
             Date.now() > project.created_at.getTime() + 86400000
           ) {
             await queryRunner.manager.delete(ProjectEntity, project.id);
-          } else if (tx?.status === 1) {
+          } else if (txToken?.status === 1 && txProxy?.status === 1) {
             await queryRunner.manager.save(ProjectEntity, {
               ...project,
               deployed: true,
