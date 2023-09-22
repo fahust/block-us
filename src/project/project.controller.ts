@@ -86,7 +86,6 @@ export class ProjectController {
   }
   
   @Interval(5000)
-  // @Timeout('notifications', 1)
   checkContractIsDeployed() {
     this.projectService.checkContractDeployTx()
   }
