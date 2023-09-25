@@ -1,0 +1,17 @@
+entity: NewsEntity
+items:
+  news{0..9}:
+    title: '{{lorem.word}}'
+    content: '{{lorem.paragraphs}}'
+    image: '{{image.avatar}}'
+    project: '@project*'
+    public: true
+    isActive: true
+  news{10..20}:
+    title: '{{lorem.word}}'
+    content: '{{lorem.paragraphs}}'
+    image: '{{image.avatar}}'
+    project: '@project*'
+    public: false
+    isActive: true
+    #likes: '@user*'

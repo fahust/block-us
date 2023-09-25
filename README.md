@@ -90,3 +90,6 @@ screen
 ctrl + a
 D
 screen -r to reatach
+
+npm run fixtures load ./fixtures --dataSource=./db/data-source.ts --sync --require=ts-node/register --require=tsconfig-paths/register
+avec dataSource.ts direct dans le root dossier

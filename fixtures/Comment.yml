@@ -1,0 +1,11 @@
+entity: CommentEntity
+items:
+  comment{0..30}:
+    title: 'title ($current)'
+    content: '{{lorem.paragraphs}}'
+    project: '@project*'
+    isActive: true
+    createdAt: '{{date.past}}'
+    updatedAt: '{{date.past}}'
+    owner: '@user*'
+    likes: '@user*'

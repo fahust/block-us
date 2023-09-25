@@ -1,0 +1,14 @@
+entity: UserEntity
+items:
+  user0:
+    walletAddress: '0x0cE1A376d6CC69a6F74f27E7B1D65171fcB69C80'
+    name: "{{person.firstName}}"
+    image: '{{image.avatar}}'
+    email: "{{internet.email}}"
+    lastName: "{{person.lastName}}"
+  user{1..10}:
+    walletAddress: '{{finance.ethereumAddress}}'
+    name: "{{person.firstName}}"
+    image: '{{image.avatar}}'
+    email: "{{internet.email}}"
+    lastName: "{{person.lastName}}"
