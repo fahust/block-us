@@ -11,7 +11,7 @@ import {
 import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
-import { Entity, Column, ManyToOne,ManyToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 
 @Entity()
 export class NewsEntity extends BaseEntity {
@@ -52,6 +52,7 @@ export class NewsEntity extends BaseEntity {
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
+  @JoinTable()
   @ManyToMany(() => UserEntity, (user) => user.newsLiked, {
     cascade: true,
     eager: true,

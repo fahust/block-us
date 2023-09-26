@@ -8,4 +8,5 @@ items:
     createdAt: '{{date.past}}'
     updatedAt: '{{date.past}}'
     owner: '@user*'
-    likes: '@user*'
+    likes: 
+      - '@user*'

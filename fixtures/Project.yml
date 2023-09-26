@@ -24,6 +24,8 @@ items:
     isActive: true
     #invests: '@invest0'
     owner: '@user0'
+    likes: 
+      - '@user*'
   project{1..15}:
     walletAddressToken: '{{finance.ethereumAddress}}'
     walletAddressProxy: '{{finance.ethereumAddress}}'
@@ -46,3 +48,5 @@ items:
     isActive: true
     #invests: '@invest*'
     owner: '@user*'
+    likes: 
+      - '@user*'

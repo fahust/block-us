@@ -1,0 +1,9 @@
+entity: VoteEntity
+items:
+  vote{1..100}:
+    hash: '{{finance.ethereumAddress}}'
+    value: "{{datatype.number(100)}}"
+    validation: '{{datatype.boolean}}'
+    chainId: "5"
+    project: "@project*"
+    owner: "@user*"

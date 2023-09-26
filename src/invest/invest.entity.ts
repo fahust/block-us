@@ -2,24 +2,23 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEnum,
-  IsEthereumAddress,
   IsNumber,
   IsOptional,
   IsString,
-  Min,
   NotEquals,
 } from 'class-validator';
 import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ChainId } from 'src/helper/enum/network.enum';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, Unique } from 'typeorm';
 
 @Entity()
+@Unique('invest_hash', ['hash', 'chainId'])
 export class InvestEntity extends BaseEntity {
   @ApiProperty()
   @IsString()
-  @Column({ unique: true })
+  @Column()
   hash: string;
 
   @ApiProperty()
