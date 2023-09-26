@@ -41,6 +41,22 @@ export class ProjectController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('category/:mainCategory')
+  @ApiOperation({
+    summary: 'Get all projects by category',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: [ProjectEntity],
+  })
+  byCategory(
+    @Param() { mainCategory },
+    @Query() { limit = 0, skip = 0 },
+  ): Promise<ProjectEntity[]> {
+    return this.projectService.byCategory(mainCategory, limit, skip);
+  }
+
+  @UseGuards(AuthGuard)
   @Get('is-owner/:id')
   @ApiOperation({
     summary: 'Get user is owner of project',

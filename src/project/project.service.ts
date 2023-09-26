@@ -62,6 +62,24 @@ export class ProjectService {
       .getMany();
   }
 
+  async byCategory(
+    mainCategory: number,
+    limit: number,
+    skip: number,
+  ): Promise<ProjectEntity[]> {
+    return this.projectRepository
+      .createQueryBuilder('project')
+      .where('project.description = :mainCategory', {
+        mainCategory,
+      })
+      .loadRelationCountAndMap('project.news', 'project.newsCount')
+      .loadRelationCountAndMap('project.comments', 'project.commentsCount')
+      .loadRelationCountAndMap('project.likes', 'project.likesCount')
+      .limit(limit)
+      .skip(skip)
+      .getMany();
+  }
+
   async isInvest(userId: number, projectId: number): Promise<Boolean> {
     const project = await this.projectRepository
       .createQueryBuilder('project')
