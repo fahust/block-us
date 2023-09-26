@@ -16,6 +16,7 @@ import { ProjectEntity } from 'src/project/project.entity';
 import { Entity, Column, ManyToMany, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { VoteEntity } from 'src/vote/vote.entity';
+import { NewsEntity } from 'src/news/news.entity';
 
 @Entity()
 export class UserEntity extends BaseEntity {
@@ -67,8 +68,23 @@ export class UserEntity extends BaseEntity {
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
-  @ManyToMany(() => CommentEntity, (comment) => comment.likes)
+  @ManyToMany(() => CommentEntity, (comment) => comment.owner)
   comments: CommentEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @ManyToMany(() => CommentEntity, (comment) => comment.likes)
+  commentsLiked: CommentEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @ManyToMany(() => ProjectEntity, (project) => project.likes)
+  projectLiked: ProjectEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @ManyToMany(() => NewsEntity, (news) => news.likes)
+  newsLiked: NewsEntity[];
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()

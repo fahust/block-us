@@ -21,9 +21,10 @@ import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ChainId } from 'src/helper/enum/network.enum';
 import { InvestEntity } from 'src/invest/invest.entity';
+import { NewsEntity } from 'src/news/news.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { VoteEntity } from 'src/vote/vote.entity';
-import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
 
 @Entity()
 export class ProjectEntity extends BaseEntity {
@@ -160,6 +161,19 @@ export class ProjectEntity extends BaseEntity {
   @IsOptional()
   @OneToMany(() => VoteEntity, (vote) => vote.project)
   votes: VoteEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @OneToMany(() => NewsEntity, (news) => news.project)
+  news: NewsEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @ManyToMany(() => UserEntity, (user) => user.projectLiked, {
+    cascade: true,
+    eager: true,
+  })
+  likes: UserEntity[];
 }
 
 function addYears(date, years) {
