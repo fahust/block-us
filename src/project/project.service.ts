@@ -54,6 +54,9 @@ export class ProjectService {
       .orWhere('project.title ILIKE :searchTerm', {
         searchTerm: `%${searchTerm}%`,
       })
+      .loadRelationCountAndMap('project.news', 'project.newsCount')
+      .loadRelationCountAndMap('project.comments', 'project.commentsCount')
+      .loadRelationCountAndMap('project.likes', 'project.likesCount')
       .limit(limit)
       .skip(skip)
       .getMany();
