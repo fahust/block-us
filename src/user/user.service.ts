@@ -23,6 +23,7 @@ export class UserService {
       .where('user.id = :id', { id })
       .leftJoinAndSelect('user.projects', 'projects')
       .leftJoinAndSelect('user.invests', 'invests', null, { limit: 10 })
+      .leftJoinAndSelect('invests.project', 'investProject')
       .leftJoinAndSelect('user.votes', 'votes', null, { limit: 10 })
       .leftJoinAndSelect('user.comments', 'comments', null, { limit: 10 })
       .getOne();
