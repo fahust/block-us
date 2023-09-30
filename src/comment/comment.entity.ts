@@ -33,14 +33,13 @@ export class CommentEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(3000)
-  @Column({ select: false })
+  @Column()
   content: string;
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
   @OneToMany(() => CommentEntity, (comment) => comment.parent, {
     cascade: true,
-    eager: true,
   })
   answers: CommentEntity[];
 
@@ -55,7 +54,6 @@ export class CommentEntity extends BaseEntity {
   @IsOptional()
   @ManyToMany(() => UserEntity, (user) => user.commentsLiked, {
     cascade: true,
-    eager: true,
   })
   @JoinTable()
   likes: UserEntity[];
@@ -71,7 +69,6 @@ export class CommentEntity extends BaseEntity {
   @IsOptional()
   @ManyToOne(() => UserEntity, (user) => user.comments, {
     cascade: true,
-    eager: true,
   })
   owner: UserEntity;
 }

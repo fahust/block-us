@@ -22,7 +22,7 @@ import { NewsEntity } from 'src/news/news.entity';
 export class UserEntity extends BaseEntity {
   @ApiProperty()
   @IsEthereumAddress()
-  @Column({ unique: true, select: false })
+  @Column({ unique: true })
   walletAddress: string;
 
   @ApiPropertyOptional()
@@ -31,14 +31,14 @@ export class UserEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  @Column({ unique: true, nullable: true, select: false })
+  @Column({ unique: true, nullable: true })
   name: string;
 
   @ApiPropertyOptional()
   @IsUrl()
   @IsNotEmpty()
   @IsOptional()
-  @Column({ nullable: true, select: false })
+  @Column({ nullable: true })
   image: string;
 
   @ApiPropertyOptional()
@@ -48,13 +48,13 @@ export class UserEntity extends BaseEntity {
   @MinLength(10)
   @MaxLength(50)
   @Exclude({ toPlainOnly: true })
-  @Column({ nullable: true, select: false })
+  @Column({ nullable: true })
   password: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsEmail()
-  @Column({ unique: true, nullable: true, select: false })
+  @Column({ unique: true, nullable: true })
   email: string;
 
   @ApiPropertyOptional()
@@ -63,7 +63,7 @@ export class UserEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  @Column({ nullable: true, select: false })
+  @Column({ nullable: true })
   lastName: string;
 
   @ApiPropertyOptional({ type: 'object' })
