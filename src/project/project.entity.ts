@@ -44,27 +44,27 @@ import {
 export class ProjectEntity extends BaseEntity {
   @ApiProperty()
   @IsEthereumAddress()
-  @Column()
+  @Column({ select: false })
   walletAddressToken: string;
 
   @ApiProperty()
   @IsEthereumAddress()
-  @Column()
+  @Column({ select: false })
   walletAddressProxy: string;
 
   @ApiProperty()
   @IsString()
-  @Column()
+  @Column({ select: false })
   hashToken: string;
 
   @ApiProperty()
   @IsString()
-  @Column()
+  @Column({ select: false })
   hashProxy: string;
 
   @ApiProperty()
   @IsEnum(ChainId)
-  @Column()
+  @Column({ select: false })
   chainId: ChainId;
 
   @ApiProperty()
@@ -72,7 +72,7 @@ export class ProjectEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  @Column()
+  @Column({ select: false })
   title: string;
 
   @ApiProperty()
@@ -80,7 +80,7 @@ export class ProjectEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(10000)
-  @Column()
+  @Column({ select: false })
   description: string;
 
   @ApiProperty()
@@ -88,7 +88,7 @@ export class ProjectEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(256)
-  @Column()
+  @Column({ select: false })
   shortDescription: string;
 
   @ApiProperty()
@@ -96,7 +96,7 @@ export class ProjectEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(100)
-  @Column()
+  @Column({ select: false })
   mainCategory: string;
 
   @ApiProperty()
@@ -104,61 +104,61 @@ export class ProjectEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(100)
-  @Column()
+  @Column({ select: false })
   subCategory: string;
 
   @ApiPropertyOptional()
   @IsUrl()
   @IsNotEmpty()
   @IsOptional()
-  @Column({ nullable: true })
+  @Column({ nullable: true, select: false })
   image: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
-  @Column({ default: false })
+  @Column({ default: false, select: false })
   deployed: boolean;
 
   @ApiProperty()
   @IsBoolean()
-  @Column()
+  @Column({ select: false })
   pausable: boolean;
 
   @ApiProperty()
   @IsBoolean()
-  @Column()
+  @Column({ select: false })
   rulesModifiable: boolean;
 
   @ApiProperty()
   @IsBoolean()
-  @Column()
+  @Column({ select: false })
   voteToWithdraw: boolean;
 
   @ApiProperty()
   @IsNumber()
-  @Column()
+  @Column({ select: false })
   dayToWithdraw: number;
 
   @ApiProperty()
   @IsDate()
   @MinDate(new Date())
   @MaxDate(addYears(new Date(), 1))
-  @Column()
+  @Column({ select: false })
   startFundraising: Date;
 
   @ApiProperty()
   @IsNumber()
   @MinDate(new Date())
   @MaxDate(addYears(new Date(), 1))
-  @Column()
+  @Column({ select: false })
   endFundraising: Date;
 
   @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(1000000000)
-  @Column()
+  @Column({ select: false })
   maxSupply: number;
 
   @ApiPropertyOptional({ type: 'object' })
@@ -193,10 +193,13 @@ export class ProjectEntity extends BaseEntity {
   @IsOptional()
   @ManyToMany(() => UserEntity, (user) => user.projectLiked, {
     cascade: true,
-    eager: true,
   })
   @JoinTable()
   likes: UserEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  liked?: UserEntity;
 }
 
 function addYears(date, years) {

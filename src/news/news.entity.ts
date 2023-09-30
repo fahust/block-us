@@ -28,19 +28,19 @@ export class NewsEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(3000)
-  @Column()
+  @Column({ select: false })
   content: string;
 
   @ApiPropertyOptional()
   @IsUrl()
   @IsNotEmpty()
   @IsOptional()
-  @Column({ nullable: true })
+  @Column({ nullable: true, select: false })
   image: string;
 
   @ApiProperty()
   @IsBoolean()
-  @Column({ default: true })
+  @Column({ default: true, select: false })
   public: boolean;
 
   @ApiPropertyOptional({ type: 'object' })

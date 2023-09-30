@@ -33,7 +33,7 @@ export class CommentEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(3000)
-  @Column()
+  @Column({ select: false })
   content: string;
 
   @ApiPropertyOptional({ type: 'object' })

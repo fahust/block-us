@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
   Request,
   UseGuards,
@@ -34,10 +35,11 @@ export class ProjectController {
     type: [ProjectEntity],
   })
   search(
+    @Request() req,
     @Param() { searchTerm },
     @Query() { limit = 0, skip = 0 },
   ): Promise<ProjectEntity[]> {
-    return this.projectService.search(searchTerm, limit, skip);
+    return this.projectService.search(searchTerm, req.user.id, limit, skip);
   }
 
   @UseGuards(AuthGuard)
@@ -50,10 +52,16 @@ export class ProjectController {
     type: [ProjectEntity],
   })
   byCategory(
+    @Request() req,
     @Param() { mainCategory },
     @Query() { limit = 0, skip = 0 },
   ): Promise<ProjectEntity[]> {
-    return this.projectService.byCategory(mainCategory, limit, skip);
+    return this.projectService.byCategory(
+      mainCategory,
+      req.user.id,
+      limit,
+      skip,
+    );
   }
 
   @UseGuards(AuthGuard)
@@ -65,10 +73,7 @@ export class ProjectController {
     status: HttpStatus.OK,
     type: ProjectEntity,
   })
-  isOwner(
-    @Request() req,
-    @Param() { id },
-  ): Promise<Omit<ProjectEntity, 'password' | 'owner'>> {
+  isOwner(@Request() req, @Param() { id }): Promise<ProjectEntity> {
     return this.projectService.isOwner(req.user.id, id);
   }
 
@@ -100,10 +105,22 @@ export class ProjectController {
   ): Promise<ProjectEntity> {
     return this.projectService.create(req.user, project);
   }
-  
+
+  @UseGuards(AuthGuard)
+  @Put('like/:projectId')
+  @ApiOperation({
+    summary: 'Like project',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ProjectEntity,
+  })
+  like(@Request() req, @Param() { projectId }): Promise<ProjectEntity> {
+    return this.projectService.like(req.user, projectId);
+  }
+
   @Interval(5000)
   checkContractIsDeployed() {
-    this.projectService.checkContractDeployTx()
+    this.projectService.checkContractDeployTx();
   }
-  
 }
