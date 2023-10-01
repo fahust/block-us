@@ -58,7 +58,7 @@ export class InvestService {
 
   async myInvests(
     ownerId: number,
-    limit: number,
+    take: number,
     skip: number,
   ): Promise<InvestEntity[]> {
     return await this.investRepository
@@ -72,14 +72,14 @@ export class InvestService {
         'invest.chainId',
         'invest.created_at',
       ])
-      .limit(limit)
+      .take(take)
       .skip(skip)
       .getMany();
   }
 
   async investsOfProject(
     projectId: number,
-    limit: number,
+    take: number,
     skip: number,
   ): Promise<InvestEntity[]> {
     return this.investRepository
@@ -94,7 +94,7 @@ export class InvestService {
         'invest.created_at',
         'project.walletAddressProxy',
       ])
-      .limit(limit)
+      .take(take)
       .skip(skip)
       .getMany();
   }

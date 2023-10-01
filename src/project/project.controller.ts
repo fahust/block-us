@@ -37,9 +37,9 @@ export class ProjectController {
   search(
     @Request() req,
     @Param() { searchTerm },
-    @Query() { limit = 0, skip = 0 },
+    @Query() { take = 0, skip = 0 },
   ): Promise<ProjectEntity[]> {
-    return this.projectService.search(searchTerm, req.user.id, limit, skip);
+    return this.projectService.search(searchTerm, req.user.id, take, skip);
   }
 
   @UseGuards(AuthGuard)
@@ -54,12 +54,12 @@ export class ProjectController {
   byCategory(
     @Request() req,
     @Param() { mainCategory },
-    @Query() { limit = 0, skip = 0 },
+    @Query() { take = 0, skip = 0 },
   ): Promise<ProjectEntity[]> {
     return this.projectService.byCategory(
       mainCategory,
       req.user.id,
-      limit,
+      take,
       skip,
     );
   }

@@ -1,9 +1,7 @@
 import {
-  Body,
   Controller,
   Get,
   HttpStatus,
-  Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -32,5 +30,57 @@ export class UserController {
   })
   get(@Request() req) {
     return this.userService.getMyAccount(req.user.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('projects')
+  @ApiOperation({
+    summary: 'Get comments from current user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: UserEntity,
+  })
+  getMyProjects(@Request() req) {
+    return this.userService.getMyProjects(req.user.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('invests')
+  @ApiOperation({
+    summary: 'Get invests from current user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: UserEntity,
+  })
+  getMyInvests(@Request() req) {
+    return this.userService.getMyInvests(req.user.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('votes')
+  @ApiOperation({
+    summary: 'Get votes from current user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: UserEntity,
+  })
+  getMyVotes(@Request() req) {
+    return this.userService.getMyVotes(req.user.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('comments')
+  @ApiOperation({
+    summary: 'Get comments from current user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: UserEntity,
+  })
+  getMyComments(@Request() req) {
+    return this.userService.getMyComments(req.user.id);
   }
 }
