@@ -230,7 +230,7 @@ export class ProjectService {
 
   async save(project: ProjectEntity): Promise<ProjectEntity> {
     try {
-      return await this.projectRepository.save(project);
+      return this.projectRepository.save(project);
     } catch (error) {
       throw new HttpException(
         JSON.stringify(error?.driverError?.detail),

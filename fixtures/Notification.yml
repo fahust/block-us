@@ -1,0 +1,7 @@
+entity: NotificationEntity
+items:
+  comment{0..30}:
+    content: '{{lorem.paragraphs}}'
+    read: false
+    project: '@project*'
+    owner: '@user*'

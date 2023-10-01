@@ -91,7 +91,7 @@ export class VoteService {
 
   async save(vote: VoteEntity): Promise<VoteEntity> {
     try {
-      return await this.voteRepository.save(vote);
+      return this.voteRepository.save(vote);
     } catch (error) {
       throw new HttpException(
         JSON.stringify(error?.driverError?.detail),
