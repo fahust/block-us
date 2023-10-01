@@ -14,6 +14,7 @@ import { TransactionReceipt } from 'ethers';
 import dataSource from 'db/data-source';
 import { HelperBlockchainService } from 'src/helper/service/helper.blockchain.service';
 import { ConfigService } from '@nestjs/config';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class VoteService {
@@ -23,6 +24,7 @@ export class VoteService {
     private voteRepository: Repository<VoteEntity>,
     @Inject(forwardRef(() => ProjectService))
     private projectService: ProjectService,
+    private notificationService: NotificationService,
     private helperBlockchainService: HelperBlockchainService,
     private configService: ConfigService,
   ) {
@@ -43,11 +45,13 @@ export class VoteService {
     projectId: number,
   ): Promise<VoteEntity> {
     const project = await this.projectService.get(projectId);
-    return this.save({
+    const voteSaved = await this.save({
       ...vote,
       owner,
       project,
     });
+    await this.notificationService.newVote(project);
+    return voteSaved;
   }
 
   async myVotes(ownerId: number): Promise<Omit<VoteEntity, 'owner'>[]> {

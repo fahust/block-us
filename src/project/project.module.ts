@@ -7,12 +7,14 @@ import { ConfigModule } from '@nestjs/config';
 import { InvestModule } from 'src/invest/invest.module';
 import { HelperModule } from 'src/helper/module/helper.module';
 import { VoteModule } from 'src/vote/vote.module';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProjectEntity]),
     ConfigModule,
     HelperModule,
+    NotificationModule,
     forwardRef(() => InvestModule),
     forwardRef(() => VoteModule),
   ],
