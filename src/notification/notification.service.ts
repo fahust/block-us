@@ -115,6 +115,40 @@ export class NotificationService {
         await queryRunner.manager.save(NotificationEntity, notification);
       }
 
+      const notification = new NotificationEntity();
+      notification.owner = uniqueInvestors[0].project.owner;
+      notification.project = project;
+      notification.content = `New vote for your project ${uniqueInvestors[0].project.title}`;
+      await queryRunner.manager.save(NotificationEntity, notification);
+
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      console.log(err);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async newComment(project: ProjectEntity) {
+    const { queryRunner, uniqueInvestors } = await this.startTransaction(
+      project,
+    );
+    try {
+      for (const investor of uniqueInvestors) {
+        const notification = new NotificationEntity();
+        notification.owner = investor.owner;
+        notification.project = project;
+        notification.content = `New comment for project ${project.title}`;
+        await queryRunner.manager.save(NotificationEntity, notification);
+      }
+
+      const notification = new NotificationEntity();
+      notification.owner = uniqueInvestors[0].project.owner;
+      notification.project = project;
+      notification.content = `New comment for your project ${uniqueInvestors[0].project.title}`;
+      await queryRunner.manager.save(NotificationEntity, notification);
+
       await queryRunner.commitTransaction();
     } catch (err) {
       console.log(err);
