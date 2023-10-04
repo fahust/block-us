@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -49,5 +50,18 @@ export class NewsController {
     @Param() { projectId },
   ): Promise<NewsEntity> {
     return this.newsService.create(article, projectId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('like/:articleId')
+  @ApiOperation({
+    summary: 'Like article',
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    type: NewsEntity,
+  })
+  like(@Request() req, @Param() { articleId }): Promise<NewsEntity> {
+    return this.newsService.like(req.user, articleId);
   }
 }
