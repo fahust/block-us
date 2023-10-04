@@ -16,11 +16,11 @@ import {
   MinDate,
   MinLength,
 } from 'class-validator';
+import { ArticleEntity } from 'src/article/article.entity';
 import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ChainId } from 'src/helper/enum/network.enum';
 import { InvestEntity } from 'src/invest/invest.entity';
-import { NewsEntity } from 'src/news/news.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { VoteEntity } from 'src/vote/vote.entity';
 import {
@@ -185,8 +185,8 @@ export class ProjectEntity extends BaseEntity {
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
-  @OneToMany(() => NewsEntity, (news) => news.project)
-  news: NewsEntity[];
+  @OneToMany(() => ArticleEntity, (article) => article.project)
+  article: ArticleEntity[];
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()

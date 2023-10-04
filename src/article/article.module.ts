@@ -1,21 +1,21 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { NewsController } from './news.controller';
-import { NewsService } from './news.service';
+import { ArticleController } from './article.controller';
+import { ArticleService } from './article.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { NewsEntity } from './news.entity';
+import { ArticleEntity } from './article.entity';
 import { ConfigModule } from '@nestjs/config';
 import { NotificationModule } from 'src/notification/notification.module';
 import { ProjectModule } from 'src/project/project.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([NewsEntity]),
+    TypeOrmModule.forFeature([ArticleEntity]),
     ProjectModule,
     NotificationModule,
     ConfigModule,
   ],
-  controllers: [NewsController],
-  providers: [NewsService],
-  exports: [NewsService],
+  controllers: [ArticleController],
+  providers: [ArticleService],
+  exports: [ArticleService],
 })
-export class NewsModule {}
+export class ArticleModule {}
