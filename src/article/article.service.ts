@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import { ArticleEntity } from './article.entity';
 import { ProjectService } from 'src/project/project.service';
 import { NotificationService } from 'src/notification/notification.service';
@@ -22,7 +22,10 @@ export class ArticleService {
       .getOne();
   }
 
-  async create(article: ArticleEntity, projectId: number): Promise<ArticleEntity> {
+  async create(
+    article: ArticleEntity,
+    projectId: number,
+  ): Promise<ArticleEntity> {
     const project = await this.projectService.get(projectId);
     const articleSaved = await this.save({
       ...article,
@@ -59,6 +62,17 @@ export class ArticleService {
     }
     await this.save(article);
     return article;
+  }
+
+  async delete(owner: UserEntity, articleId: number): Promise<DeleteResult> {
+    const article = await this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoin('article.project', 'project')
+      .leftJoin('project.owner', 'owner')
+      .where('article.id = :articleId', { articleId })
+      .andWhere('owner.id = :ownerId', { ownerId: owner.id })
+      .getOneOrFail();
+    return this.articleRepository.delete(article);
   }
 
   async save(article: ArticleEntity): Promise<ArticleEntity> {

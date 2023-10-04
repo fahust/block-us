@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -13,6 +14,7 @@ import { AuthGuard } from '../authentication/guard/auth.guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ArticleEntity } from './article.entity';
 import { ArticleService } from './article.service';
+import { DeleteResult } from 'typeorm';
 
 @ApiHeader({ name: 'authorization', description: 'Bearer ...' })
 @ApiTags('Article')
@@ -63,5 +65,18 @@ export class ArticleController {
   })
   like(@Request() req, @Param() { articleId }): Promise<ArticleEntity> {
     return this.articleService.like(req.user, articleId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete(':articleId')
+  @ApiOperation({
+    summary: 'Delete article',
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    type: DeleteResult,
+  })
+  delete(@Request() req, @Param() { articleId }): Promise<DeleteResult> {
+    return this.articleService.delete(req.user, articleId);
   }
 }

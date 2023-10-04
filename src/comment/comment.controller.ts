@@ -71,7 +71,7 @@ export class CommentController {
   @UseGuards(AuthGuard)
   @Delete(':commentId')
   @ApiOperation({
-    summary: 'delete comment',
+    summary: 'Delete comment',
   })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
