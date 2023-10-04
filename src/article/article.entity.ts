@@ -41,7 +41,7 @@ export class ArticleEntity extends BaseEntity {
   @ApiProperty()
   @IsBoolean()
   @Column({ default: true })
-  public: boolean;
+  visible: boolean;
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()

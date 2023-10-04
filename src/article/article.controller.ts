@@ -26,16 +26,16 @@ export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @UseGuards(AuthGuard)
-  @Get()
+  @Get(':projectId')
   @ApiOperation({
-    summary: 'Get current article with all join',
+    summary: 'Get one article with all join',
   })
   @ApiResponse({
     status: HttpStatus.OK,
     type: ArticleEntity,
   })
-  get(@Request() req) {
-    return this.articleService.get(req.article.id);
+  get(@Request() req, @Param() { articleId }) {
+    return this.articleService.get(req.user, articleId);
   }
 
   @UseGuards(AuthGuard)
@@ -65,6 +65,22 @@ export class ArticleController {
   })
   like(@Request() req, @Param() { articleId }): Promise<ArticleEntity> {
     return this.articleService.like(req.user, articleId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put(':articleId')
+  @ApiOperation({
+    summary: 'Update article title, content, image, visible',
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    type: ArticleEntity,
+  })
+  update(
+    @Request() req,
+    @Body() article: ArticleEntity,
+  ): Promise<ArticleEntity> {
+    return this.articleService.update(req.user, article);
   }
 
   @UseGuards(AuthGuard)
