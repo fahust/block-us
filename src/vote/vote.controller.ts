@@ -83,7 +83,7 @@ export class VoteController {
     summary: 'Create vote',
   })
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     type: VoteEntity,
   })
   create(

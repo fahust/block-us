@@ -88,7 +88,7 @@ export class InvestController {
     summary: 'Create invest',
   })
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     type: InvestEntity,
   })
   create(

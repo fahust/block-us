@@ -96,7 +96,7 @@ export class ProjectController {
     summary: 'Create project',
   })
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     type: ProjectEntity,
   })
   create(
@@ -112,7 +112,7 @@ export class ProjectController {
     summary: 'Like project',
   })
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     type: ProjectEntity,
   })
   like(@Request() req, @Param() { projectId }): Promise<ProjectEntity> {
