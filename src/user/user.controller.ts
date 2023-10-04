@@ -20,7 +20,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(AuthGuard)
-  @Get('')
+  @Get()
   @ApiOperation({
     summary: 'Get current user with all join',
   })

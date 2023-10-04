@@ -91,7 +91,7 @@ export class ProjectController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('')
+  @Post()
   @ApiOperation({
     summary: 'Create project',
   })
