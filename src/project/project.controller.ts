@@ -28,7 +28,8 @@ export class ProjectController {
   @UseGuards(AuthGuard)
   @Get('search/:searchTerm')
   @ApiOperation({
-    summary: 'Search project by term in description, short description, and title, with all join',
+    summary:
+      'Search project by term in description, short description, and title, with all join',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -117,6 +118,22 @@ export class ProjectController {
   })
   like(@Request() req, @Param() { projectId }): Promise<ProjectEntity> {
     return this.projectService.like(req.user, projectId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put(':projectId')
+  @ApiOperation({
+    summary: 'Update project title, content',
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    type: ProjectEntity,
+  })
+  update(
+    @Request() req,
+    @Body() project: ProjectEntity,
+  ): Promise<ProjectEntity> {
+    return this.projectService.update(req.user, project);
   }
 
   @Interval(5000)

@@ -228,6 +228,43 @@ export class ProjectService {
     return project;
   }
 
+  async update(
+    owner: UserEntity,
+    project: ProjectEntity,
+  ): Promise<ProjectEntity> {
+    let edit = await this.projectRepository
+      .createQueryBuilder('project')
+      .leftJoin('project.owner', 'owner')
+      .where('project.id = :projectId', { projectId: project.id })
+      .andWhere('owner.id = :ownerId', { ownerId: owner.id })
+      .getOneOrFail();
+
+    const { description, shortDescription, image } = project;
+    edit = { ...edit, description, shortDescription, image };
+
+    if (edit.rulesModifiable) {
+      const {
+        pausable,
+        voteToWithdraw,
+        dayToWithdraw,
+        startFundraising,
+        endFundraising,
+        maxSupply,
+      } = project;
+      edit = {
+        ...edit,
+        pausable,
+        voteToWithdraw,
+        dayToWithdraw,
+        startFundraising,
+        endFundraising,
+        maxSupply,
+      };
+    }
+
+    return this.save(edit);
+  }
+
   async save(project: ProjectEntity): Promise<ProjectEntity> {
     try {
       return this.projectRepository.save(project);
