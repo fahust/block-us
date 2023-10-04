@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Request as RequestExpress } from 'express';
 import { ethers } from 'ethers';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthRefreshJwtGuard } from 'src/authentication/decorator/authentication.decorator';
 import { AuthenticationChallengeResponseDTO } from 'src/authentication/dto/authentication-challenge-response.dto';
 import { AuthenticationRequestDTO } from 'src/authentication/dto/authentication-request.dto';
@@ -26,6 +26,9 @@ import { AuthenticationChallengeRequestDTO } from 'src/authentication/dto/authen
 export class AuthenticationController {
   constructor(private authenticationService: AuthenticationService) {}
 
+  @ApiOperation({
+    summary: 'Challenge authentication verification with wallet address',
+  })
   @Post('/challenge')
   async challenge(
     @Body()
@@ -34,6 +37,9 @@ export class AuthenticationController {
     return this.authenticationService.challenge(authenticationChallengeRequest);
   }
 
+  @ApiOperation({
+    summary: 'Authentication with wallet address and crypto signature',
+  })
   @Post('/')
   async authenticate(
     @Body() authenticationRequest: AuthenticationRequestDTO,
@@ -41,6 +47,9 @@ export class AuthenticationController {
     return this.authenticationService.authentication(authenticationRequest);
   }
 
+  @ApiOperation({
+    summary: 'Refresh JWT token',
+  })
   @Get('/refresh')
   @AuthRefreshJwtGuard()
   async refreshToken(@Request() req): Promise<AuthenticationResponseDTO> {
@@ -54,30 +63,30 @@ export class AuthenticationController {
     return req.headers.authorization.substring('Bearer '.length);
   }
 
-  @Get('/create-user')
-  async get(): Promise<any> {
-    const wallet = ethers.Wallet.createRandom();
-    const walletAddress = wallet.address;
+  // @Get('/create-user')
+  // async get(): Promise<any> {
+  //   const wallet = ethers.Wallet.createRandom();
+  //   const walletAddress = wallet.address;
 
-    const challengePayload = {
-      walletAddress,
-    };
+  //   const challengePayload = {
+  //     walletAddress,
+  //   };
 
-    const { challenge } = await this.authenticationService.challenge(
-      challengePayload,
-    );
+  //   const { challenge } = await this.authenticationService.challenge(
+  //     challengePayload,
+  //   );
 
-    const signature = await wallet.signMessage(challenge);
+  //   const signature = await wallet.signMessage(challenge);
 
-    const authenticationPayload = {
-      walletAddress,
-      signature,
-    };
+  //   const authenticationPayload = {
+  //     walletAddress,
+  //     signature,
+  //   };
 
-    const result = await this.authenticationService.authentication(
-      authenticationPayload,
-    );
+  //   const result = await this.authenticationService.authentication(
+  //     authenticationPayload,
+  //   );
 
-    return result;
-  }
+  //   return result;
+  // }
 }

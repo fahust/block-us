@@ -92,6 +92,7 @@ export class InvestService {
       .select([
         'invest.id',
         'invest.hash',
+        'invest.value',
         'invest.chainId',
         'invest.created_at',
         'project.walletAddressProxy',
@@ -102,12 +103,14 @@ export class InvestService {
   }
 
   async investsValueOfProject(projectId: number): Promise<number> {
-    const invests = await this.investsOfProject(projectId, 0, 0);
-
-    return invests.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.value,
-      0,
-    );
+    const { investSum } = await this.investRepository
+      .createQueryBuilder('invest')
+      .leftJoin('invest.project', 'project')
+      .where('project.id = :projectId', { projectId })
+      .andWhere('invest.validation = :validation', { validation: true })
+      .select('SUM(invest.value)', 'investSum')
+      .getRawOne();
+    return +investSum;
   }
 
   async save(invest: InvestEntity): Promise<InvestEntity> {

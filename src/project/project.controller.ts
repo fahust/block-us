@@ -28,7 +28,7 @@ export class ProjectController {
   @UseGuards(AuthGuard)
   @Get('search/:searchTerm')
   @ApiOperation({
-    summary: 'Search project with all join',
+    summary: 'Search project by term in description, short description, and title, with all join',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -109,7 +109,7 @@ export class ProjectController {
   @UseGuards(AuthGuard)
   @Put('like/:projectId')
   @ApiOperation({
-    summary: 'Like project',
+    summary: 'Like or dislike project',
   })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,

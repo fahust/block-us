@@ -36,7 +36,7 @@ export class ProjectService {
       .where('project.id = :id', { id })
       .leftJoin('project.invests', 'invests')
       .leftJoin('project.owner', 'owner')
-      .leftJoin('project.article', 'article')
+      .leftJoin('project.articles', 'articles')
       .leftJoin('project.comments', 'comments')
       .select([
         'project.id',
@@ -58,16 +58,16 @@ export class ProjectService {
         'invests.value',
         'invests.validation',
         'owner.id',
-        'article.id',
-        'article.title',
-        'article.content',
-        'article.image',
+        'articles.id',
+        'articles.title',
+        'articles.content',
+        'articles.image',
         'comments.id',
         'comments.title',
         'comments.content',
       ])
       .loadRelationCountAndMap('project.likes', 'project.likes')
-      .loadRelationCountAndMap('article.likes', 'article.likes')
+      .loadRelationCountAndMap('articles.likes', 'articles.likes')
       .loadRelationCountAndMap('comments.likes', 'comments.likes')
       .getOne();
   }
@@ -89,7 +89,7 @@ export class ProjectService {
       .orWhere('project.title ILIKE :searchTerm', {
         searchTerm: `%${searchTerm}%`,
       })
-      .leftJoin('project.article', 'article')
+      .leftJoin('project.articles', 'articles')
       .leftJoin('project.comments', 'comments')
       .select([
         'project.id',
@@ -103,10 +103,10 @@ export class ProjectService {
         'project.maxSupply',
         'owner.id',
       ])
-      .loadRelationCountAndMap('project.article', 'project.article')
+      .loadRelationCountAndMap('project.articles', 'project.articles')
       .loadRelationCountAndMap('project.comments', 'project.comments')
       .loadRelationCountAndMap('project.likes', 'project.likes')
-      .loadRelationCountAndMap('article.likes', 'article.likes')
+      .loadRelationCountAndMap('articles.likes', 'articles.likes')
       .loadRelationCountAndMap('comments.likes', 'comments.likes')
       .leftJoinAndMapOne(
         'project.liked',
@@ -146,7 +146,7 @@ export class ProjectService {
         'project.maxSupply',
         'owner.id',
       ])
-      .loadRelationCountAndMap('project.article', 'project.article')
+      .loadRelationCountAndMap('project.articles', 'project.articles')
       .loadRelationCountAndMap('project.comments', 'project.comments')
       .loadRelationCountAndMap('project.likes', 'project.likes')
       .leftJoinAndMapOne(

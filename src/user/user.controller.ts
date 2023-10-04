@@ -35,7 +35,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('projects')
   @ApiOperation({
-    summary: 'Get comments from current user',
+    summary: 'Get projects from current user',
   })
   @ApiResponse({
     status: HttpStatus.OK,
