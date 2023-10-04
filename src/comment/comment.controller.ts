@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -13,6 +14,7 @@ import { CommentService } from './comment.service';
 import { AuthGuard } from '../authentication/guard/auth.guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommentEntity } from './comment.entity';
+import { DeleteResult } from 'typeorm';
 
 @ApiHeader({ name: 'authorization', description: 'Bearer ...' })
 @ApiTags('Comment')
@@ -64,5 +66,18 @@ export class CommentController {
   })
   like(@Request() req, @Param() { commentId }): Promise<CommentEntity> {
     return this.commentService.like(req.user, commentId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete(':commentId')
+  @ApiOperation({
+    summary: 'delete comment',
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    type: DeleteResult,
+  })
+  delete(@Request() req, @Param() { commentId }): Promise<DeleteResult> {
+    return this.commentService.delete(req.user, commentId);
   }
 }

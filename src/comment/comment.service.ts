@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import { CommentEntity } from './comment.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { ProjectService } from 'src/project/project.service';
@@ -70,6 +70,10 @@ export class CommentService {
     }
     await this.save(comment);
     return comment;
+  }
+
+  async delete(owner: UserEntity, commentId: number): Promise<DeleteResult> {
+    return this.commentRepository.delete({ owner, id: commentId });
   }
 
   async save(comment: CommentEntity): Promise<CommentEntity> {
