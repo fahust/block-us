@@ -12,9 +12,13 @@ import { VoteModule } from './vote/vote.module';
 import { NotificationModule } from './notification/notification.module';
 import { ArticleModule } from './article/article.module';
 import { ReclaimModule } from './reclaim/reclaim.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
+    CacheModule.register({
+      isGlobal: true,
+    }),
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
