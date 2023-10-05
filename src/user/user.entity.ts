@@ -18,6 +18,7 @@ import { Exclude } from 'class-transformer';
 import { VoteEntity } from 'src/vote/vote.entity';
 import { NotificationEntity } from 'src/notification/notification.entity';
 import { ArticleEntity } from 'src/article/article.entity';
+import { ReclaimEntity } from 'src/reclaim/reclaim.entity';
 
 @Entity()
 export class UserEntity extends BaseEntity {
@@ -96,6 +97,11 @@ export class UserEntity extends BaseEntity {
   @IsOptional()
   @OneToMany(() => InvestEntity, (invest) => invest.owner)
   invests: InvestEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @OneToMany(() => ReclaimEntity, (reclaim) => reclaim.owner)
+  reclaims: ReclaimEntity[];
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()

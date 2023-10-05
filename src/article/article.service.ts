@@ -25,7 +25,7 @@ export class ArticleService {
         visible: true,
         ownerId: owner.id,
       })
-      .getOne();
+      .getOneOrFail();
   }
 
   async create(

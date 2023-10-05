@@ -21,6 +21,7 @@ import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ChainId } from 'src/helper/enum/network.enum';
 import { InvestEntity } from 'src/invest/invest.entity';
+import { ReclaimEntity } from 'src/reclaim/reclaim.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { VoteEntity } from 'src/vote/vote.entity';
 import {
@@ -177,6 +178,11 @@ export class ProjectEntity extends BaseEntity {
   @IsOptional()
   @OneToMany(() => InvestEntity, (invest) => invest.project)
   invests: InvestEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @OneToMany(() => ReclaimEntity, (reclaim) => reclaim.project)
+  reclaims: ReclaimEntity[];
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()

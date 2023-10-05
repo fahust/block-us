@@ -10,13 +10,13 @@ import {
 import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ChainId } from 'src/helper/enum/network.enum';
 import { ProjectEntity } from 'src/project/project.entity';
-import { ReclaimEntity } from 'src/reclaim/reclaim.entity';
 import { UserEntity } from 'src/user/user.entity';
-import { Entity, Column, ManyToOne, Unique } from 'typeorm';
+import { VoteEntity } from 'src/vote/vote.entity';
+import { Entity, Column, ManyToOne, OneToMany, Unique } from 'typeorm';
 
 @Entity()
-@Unique('vote_hash_index', ['hash', 'chainId'])
-export class VoteEntity extends BaseEntity {
+@Unique('reclaim_hash', ['hash', 'chainId'])
+export class ReclaimEntity extends BaseEntity {
   @ApiProperty()
   @IsString()
   @Column()
@@ -41,16 +41,16 @@ export class VoteEntity extends BaseEntity {
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
-  @ManyToOne(() => ProjectEntity, (project) => project.votes)
+  @ManyToOne(() => ProjectEntity, (project) => project.reclaims)
   project: ProjectEntity;
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
-  @ManyToOne(() => ReclaimEntity, (reclaim) => reclaim.votes)
-  reclaim: ReclaimEntity;
+  @OneToMany(() => VoteEntity, (vote) => vote.reclaim)
+  votes: VoteEntity[];
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
-  @ManyToOne(() => UserEntity, (user) => user.votes)
+  @ManyToOne(() => UserEntity, (user) => user.reclaims)
   owner: UserEntity;
 }

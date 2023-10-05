@@ -11,6 +11,7 @@ import { AuthenticationModule } from './authentication/module/authentication.mod
 import { VoteModule } from './vote/vote.module';
 import { NotificationModule } from './notification/notification.module';
 import { ArticleModule } from './article/article.module';
+import { ReclaimModule } from './reclaim/reclaim.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ArticleModule } from './article/article.module';
     AuthenticationModule,
     VoteModule,
     NotificationModule,
+    ReclaimModule,
   ],
   controllers: [],
   providers: [],

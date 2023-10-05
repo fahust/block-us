@@ -5,6 +5,7 @@ import { NotificationEntity } from './notification.entity';
 import { InvestEntity } from 'src/invest/invest.entity';
 import dataSource from 'db/data-source';
 import { ProjectEntity } from 'src/project/project.entity';
+import { ReclaimEntity } from 'src/reclaim/reclaim.entity';
 
 @Injectable()
 export class NotificationService {
@@ -155,6 +156,23 @@ export class NotificationService {
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();
+    }
+  }
+
+  async newReclaim(reclaim: ReclaimEntity, queryRunner: QueryRunner) {
+    const uniqueInvestors = reclaim.project.invests?.filter(
+      (i1, index) =>
+      reclaim.project.invests.findIndex(
+          (i2: InvestEntity) => i1?.owner.id === i2?.owner.id,
+        ) === index,
+    );
+
+    for (const investor of uniqueInvestors) {
+      const notification = new NotificationEntity();
+      notification.owner = investor.owner;
+      notification.project = reclaim.project;
+      notification.content = `New reclaim of ${reclaim.value} wei for project ${reclaim.project.title}`;
+      await queryRunner.manager.save(NotificationEntity, notification);
     }
   }
 
