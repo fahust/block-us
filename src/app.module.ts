@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
 import { NewsModule } from './news/news.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { NewsModule } from './news/news.module';
     AuthModule,
     ProjectModule,
     NewsModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
