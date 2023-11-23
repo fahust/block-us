@@ -1,19 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { InvestEntity } from 'src/invest/invest.entity';
 import { ProjectEntity } from 'src/project/project.entity';
-import {
-  Entity,
-  Column,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  OneToOne,
-  JoinColumn,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, ManyToMany, OneToMany } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class UserEntity extends BaseEntity {
@@ -24,18 +16,26 @@ export class UserEntity extends BaseEntity {
   address: string;
 
   @ApiProperty()
+  @IsString()
+  @MinLength(3)
   @Column()
   name: string;
 
   @ApiProperty()
-  @Column()
+  @IsString()
+  @MinLength(10)
+  @Exclude({ toPlainOnly: true })
+  @Column({ select: false })
   password: string;
 
   @ApiProperty()
+  @IsEmail()
   @Column()
   email: string;
 
   @ApiProperty()
+  @IsString()
+  @MinLength(3)
   @Column()
   lastName: string;
 
