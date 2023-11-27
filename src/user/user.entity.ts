@@ -18,12 +18,14 @@ export class UserEntity extends BaseEntity {
   @ApiProperty()
   @IsString()
   @MinLength(3)
+  @MaxLength(50)
   @Column()
   name: string;
 
   @ApiProperty()
   @IsString()
   @MinLength(10)
+  @MaxLength(50)
   @Exclude({ toPlainOnly: true })
   @Column({ select: false })
   password: string;
@@ -36,6 +38,7 @@ export class UserEntity extends BaseEntity {
   @ApiProperty()
   @IsString()
   @MinLength(3)
+  @MaxLength(50)
   @Column()
   lastName: string;
 

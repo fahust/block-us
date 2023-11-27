@@ -1,27 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MaxLength, MinLength } from 'class-validator';
+import { Exclude } from 'class-transformer';
+import { IsString, MaxLength, MinLength } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { InvestEntity } from 'src/invest/invest.entity';
 import { UserEntity } from 'src/user/user.entity';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  ManyToOne,
-  OneToOne,
-  JoinColumn,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 
 @Entity()
 export class ProjectEntity extends BaseEntity {
   @ApiProperty()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(50)
   @Column()
   title: string;
 
   @ApiProperty()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(3000)
+  @Column()
+  description: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(10)
+  @MaxLength(50)
+  @Exclude({ toPlainOnly: true })
+  @Column({ select: false })
   @Column()
   password: string;
 
