@@ -1,28 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MaxLength, MinLength } from 'class-validator';
+import { IsEthereumAddress, IsNumber, Min } from 'class-validator';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  OneToOne,
-  JoinColumn,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class InvestEntity extends BaseEntity {
   @ApiProperty()
-  @MinLength(42)
-  @MaxLength(42)
+  @IsEthereumAddress()
   @Column()
   address: string;
 
   @ApiProperty()
+  @IsNumber()
+  @Min(1)
   @Column()
   value: number;
 

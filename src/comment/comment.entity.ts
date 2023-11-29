@@ -1,27 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  ManyToMany,
-  OneToOne,
-  JoinColumn,
-  JoinTable,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, Column, OneToMany, ManyToMany, ManyToOne } from 'typeorm';
 
 @Entity()
 export class CommentEntity extends BaseEntity {
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(50)
   @Column()
   title: string;
 
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(3000)
   @Column()
   content: string;
 

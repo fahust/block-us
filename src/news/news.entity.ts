@@ -1,27 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsUrl,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  OneToOne,
-  JoinColumn,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class NewsEntity extends BaseEntity {
-
   @ApiProperty()
-  @Column()
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
+  @Column()
   title: string;
 
   @ApiProperty()
