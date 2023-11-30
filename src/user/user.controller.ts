@@ -24,7 +24,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(AuthGuard)
-  @Get('detail')
+  @Get('')
   @ApiOperation({
     summary: 'Get current user with all join',
   })
@@ -32,7 +32,7 @@ export class UserController {
     status: HttpStatus.OK,
     type: UserEntity,
   })
-  userDetail(@Request() req) {
-    return this.userService.detail(req.user.id);
+  get(@Request() req) {
+    return this.userService.get(req.user.id);
   }
 }

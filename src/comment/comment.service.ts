@@ -10,14 +10,7 @@ export class CommentService {
     private commentRepository: Repository<CommentEntity>,
   ) {}
 
-  async comment(id: number): Promise<CommentEntity> {
-    return this.commentRepository
-      .createQueryBuilder('comment')
-      .where('comment.id = :id', { id })
-      .getOne();
-  }
-
-  async detail(id: number): Promise<CommentEntity> {
+  async get(id: number): Promise<CommentEntity> {
     return this.commentRepository
       .createQueryBuilder('comment')
       .where('comment.id = :id', { id })

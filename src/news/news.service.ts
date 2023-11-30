@@ -10,14 +10,7 @@ export class NewsService {
     private newsRepository: Repository<NewsEntity>,
   ) {}
 
-  async news(id: number): Promise<NewsEntity> {
-    return this.newsRepository
-      .createQueryBuilder('news')
-      .where('news.id = :id', { id })
-      .getOne();
-  }
-
-  async detail(id: number): Promise<NewsEntity> {
+  async get(id: number): Promise<NewsEntity> {
     return this.newsRepository
       .createQueryBuilder('news')
       .where('news.id = :id', { id })

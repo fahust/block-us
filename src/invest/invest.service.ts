@@ -10,14 +10,7 @@ export class InvestService {
     private investRepository: Repository<InvestEntity>,
   ) {}
 
-  async invest(id: number): Promise<InvestEntity> {
-    return this.investRepository
-      .createQueryBuilder('invest')
-      .where('invest.id = :id', { id })
-      .getOne();
-  }
-
-  async detail(id: number): Promise<InvestEntity> {
+  async get(id: number): Promise<InvestEntity> {
     return this.investRepository
       .createQueryBuilder('invest')
       .where('invest.id = :id', { id })

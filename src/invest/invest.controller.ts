@@ -22,7 +22,7 @@ export class InvestController {
   constructor(private readonly investService: InvestService) {}
 
   @UseGuards(AuthGuard)
-  @Get('detail')
+  @Get('')
   @ApiOperation({
     summary: 'Get current invest with all join',
   })
@@ -30,7 +30,7 @@ export class InvestController {
     status: HttpStatus.OK,
     type: InvestEntity,
   })
-  investDetail(@Request() req) {
-    return this.investService.detail(req.invest.id);
+  get(@Request() req) {
+    return this.investService.get(req.invest.id);
   }
 }
