@@ -71,3 +71,22 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+npm run migration:generate -- src/migrations/migrations
+move to folder migrations
+npm run migration:run
+
+SCREEN => https://digitalboxweb.wordpress.com/2022/01/04/screen-sous-nas-synology/
+POSTGRE => https://digitalboxweb.wordpress.com/2019/10/29/postgresql-sur-nas-synology/
+
+VIM => https://www.youtube.com/watch?v=MqJuKu38BsA&ab_channel=SondreGr%C3%B8n%C3%A5sMedia
+:wq save
+a insert
+escape stop
+! force
+
+screen
+ctrl + a
+D
+screen -r to reatach

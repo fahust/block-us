@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsUrl,
   MaxLength,
@@ -31,11 +32,11 @@ export class NewsEntity extends BaseEntity {
   @ApiProperty()
   @IsUrl()
   @IsNotEmpty()
-  @Column()
+  @IsOptional()
+  @Column({ nullable: true })
   image: string;
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @ManyToOne(() => ProjectEntity, (project) => project.comments, {
     orphanedRowAction: 'soft-delete',
   })

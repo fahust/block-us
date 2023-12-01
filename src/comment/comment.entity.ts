@@ -23,31 +23,27 @@ export class CommentEntity extends BaseEntity {
   @Column()
   content: string;
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @OneToMany(() => CommentEntity, (comment) => comment.parent, {
     cascade: true,
     eager: true,
   })
   answers: CommentEntity[];
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @ManyToOne(() => CommentEntity, (comment) => comment.answers, {
     orphanedRowAction: 'soft-delete',
   })
   parent: CommentEntity;
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @ManyToMany(() => UserEntity, (user) => user.comments, {
     cascade: true,
     eager: true,
   })
   likes: UserEntity[];
 
-  @ApiProperty()
-  @Column()
+  @ApiProperty({ type: 'object' })
   @ManyToOne(() => ProjectEntity, (project) => project.comments, {
     orphanedRowAction: 'soft-delete',
   })
