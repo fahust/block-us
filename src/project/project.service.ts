@@ -25,6 +25,29 @@ export class ProjectService {
     return project;
   }
 
+  async search(
+    searchTerm: number,
+    limit: number,
+    skip: number,
+  ): Promise<Omit<ProjectEntity, 'password'>[]> {
+    const projects = await this.projectRepository
+      .createQueryBuilder('project')
+      .where('project.description like :searchTerm', {
+        searchTerm: `%${searchTerm}%`,
+      })
+      .orWhere('project.title ILIKE :searchTerm', {
+        searchTerm: `%${searchTerm}%`,
+      })
+      .limit(limit)
+      .skip(skip)
+      .getMany();
+
+    return projects.map((p) => {
+      const { password: _, ...project } = p;
+      return project;
+    });
+  }
+
   async create(
     owner: UserEntity,
     project: ProjectEntity,
