@@ -37,6 +37,19 @@ export class ProjectController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('is-owner/:id')
+  @ApiOperation({
+    summary: 'Get user is owner of project',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ProjectEntity,
+  })
+  isOwner(@Request() req, @Param() { id }) {
+    return this.projectService.isOwner(req.user.id, id);
+  }
+
+  @UseGuards(AuthGuard)
   @Get(':id')
   @ApiOperation({
     summary: 'Get project with all join',
