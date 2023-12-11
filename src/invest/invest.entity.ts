@@ -20,7 +20,7 @@ export class InvestEntity extends BaseEntity {
 
   @ApiProperty({ type: 'object' })
   @ManyToOne(() => ProjectEntity, (project) => project.invests)
-  project: ProjectEntity;
+  project: Omit<ProjectEntity, 'password'>;
 
   @ApiProperty({ type: 'object' })
   @ManyToOne(() => UserEntity, (user) => user.invests)

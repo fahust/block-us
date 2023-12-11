@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Request,
   UseGuards,
@@ -22,15 +23,28 @@ export class InvestController {
   constructor(private readonly investService: InvestService) {}
 
   @UseGuards(AuthGuard)
-  @Get('')
+  @Get(':id')
   @ApiOperation({
-    summary: 'Get current invest with all join',
+    summary: 'Get invest with all join',
   })
   @ApiResponse({
     status: HttpStatus.OK,
     type: InvestEntity,
   })
-  get(@Request() req) {
-    return this.investService.get(req.invest.id);
+  get(@Param() { id }) {
+    return this.investService.get(id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post(':projectId')
+  @ApiOperation({
+    summary: 'Create invest',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: InvestEntity,
+  })
+  create(@Request() req, @Body() invest: InvestEntity, @Param() { projectId }) {
+    return this.investService.create(req.user, invest, projectId);
   }
 }
