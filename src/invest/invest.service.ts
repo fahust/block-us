@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InvestEntity } from './invest.entity';
@@ -34,6 +34,13 @@ export class InvestService {
   }
 
   async save(invest: InvestEntity): Promise<InvestEntity> {
-    return this.investRepository.save(invest);
+    try {
+      return await this.investRepository.save(invest);
+    } catch (error) {
+      throw new HttpException(
+        JSON.stringify(error?.driverError?.detail),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
