@@ -23,9 +23,22 @@ export class InvestController {
   constructor(private readonly investService: InvestService) {}
 
   @UseGuards(AuthGuard)
+  @Get('owns')
+  @ApiOperation({
+    summary: 'Get my invests',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: InvestEntity,
+  })
+  myInvests(@Request() req) {
+    return this.investService.myInvests(req.user.id);
+  }
+
+  @UseGuards(AuthGuard)
   @Get(':id')
   @ApiOperation({
-    summary: 'Get invest with all join',
+    summary: 'Get invest',
   })
   @ApiResponse({
     status: HttpStatus.OK,
