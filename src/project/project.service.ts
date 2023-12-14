@@ -1,10 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProjectEntity } from './project.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
+import { InvestService } from 'src/invest/invest.service';
 
 @Injectable()
 export class ProjectService {
@@ -12,6 +13,8 @@ export class ProjectService {
   constructor(
     @InjectRepository(ProjectEntity)
     private projectRepository: Repository<ProjectEntity>,
+    @Inject(forwardRef(() => InvestService))
+    private investService: InvestService,
     private configService: ConfigService,
   ) {
     this.saltOrRounds = this.configService.get<number>('SALT_PASSWORD');
