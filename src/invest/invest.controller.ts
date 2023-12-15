@@ -36,6 +36,19 @@ export class InvestController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('project/:projectId')
+  @ApiOperation({
+    summary: 'Get all invests from a project',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: InvestEntity,
+  })
+  investsOfProject(@Param() { projectId }) {
+    return this.investService.investsOfProject(projectId);
+  }
+
+  @UseGuards(AuthGuard)
   @Get(':id')
   @ApiOperation({
     summary: 'Get invest',
