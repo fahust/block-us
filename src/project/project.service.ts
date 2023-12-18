@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProjectEntity } from './project.entity';
@@ -51,7 +57,7 @@ export class ProjectService {
     });
   }
 
-  async isInvest(userId: number, projectId: number) {
+  async isInvest(userId: number, projectId: number): Promise<Boolean> {
     const project = await this.projectRepository
       .createQueryBuilder('project')
       .where('project.id = :projectId', { projectId })
@@ -64,7 +70,10 @@ export class ProjectService {
     return isInvest ? true : false;
   }
 
-  async isOwner(userId: number, projectId: number) {
+  async isOwner(
+    userId: number,
+    projectId: number,
+  ): Promise<Omit<ProjectEntity, 'password' | 'owner'>> {
     try {
       const {
         password: _,

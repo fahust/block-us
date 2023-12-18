@@ -52,13 +52,13 @@ export class InvestService {
     });
   }
 
-  async investsOfProject(projectId: number) {
+  async investsOfProject(projectId: number): Promise<number> {
     const invests = await this.investRepository
       .createQueryBuilder('invest')
       .leftJoinAndSelect('invest.project', 'project')
       .where('project.id = :projectId', { projectId })
       .getMany();
-      
+
     return invests.reduce(
       (accumulator, currentValue) => accumulator + currentValue.value,
       0,
