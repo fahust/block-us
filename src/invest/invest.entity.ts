@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEthereumAddress, IsNumber, Min } from 'class-validator';
+import { IsEthereumAddress, IsNumber, Min, NotEquals } from 'class-validator';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
@@ -14,7 +14,7 @@ export class InvestEntity extends BaseEntity {
 
   @ApiProperty()
   @IsNumber()
-  @Min(1)
+  @NotEquals(0)
   @Column()
   value: number;
 
