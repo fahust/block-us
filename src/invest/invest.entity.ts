@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEthereumAddress, IsNumber, Min, NotEquals } from 'class-validator';
+import {
+  IsBoolean,
+  IsEthereumAddress,
+  IsNumber,
+  IsOptional,
+  Min,
+  NotEquals,
+} from 'class-validator';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
@@ -17,6 +24,12 @@ export class InvestEntity extends BaseEntity {
   @NotEquals(0)
   @Column()
   value: number;
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsOptional()
+  @Column({ default: false })
+  validation: boolean;
 
   @ApiProperty({ type: 'object' })
   @ManyToOne(() => ProjectEntity, (project) => project.invests)
