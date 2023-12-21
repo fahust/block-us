@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
@@ -23,27 +23,31 @@ export class CommentEntity extends BaseEntity {
   @Column()
   content: string;
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @OneToMany(() => CommentEntity, (comment) => comment.parent, {
     cascade: true,
     eager: true,
   })
   answers: CommentEntity[];
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @ManyToOne(() => CommentEntity, (comment) => comment.answers, {
     orphanedRowAction: 'soft-delete',
   })
   parent: CommentEntity;
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @ManyToMany(() => UserEntity, (user) => user.comments, {
     cascade: true,
     eager: true,
   })
   likes: UserEntity[];
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @ManyToOne(() => ProjectEntity, (project) => project.comments, {
     orphanedRowAction: 'soft-delete',
   })

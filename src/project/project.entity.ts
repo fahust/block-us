@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
   IsNotEmpty,
@@ -32,7 +32,7 @@ export class ProjectEntity extends BaseEntity {
   @Column()
   description: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsUrl()
   @IsNotEmpty()
   @IsOptional()
@@ -48,7 +48,7 @@ export class ProjectEntity extends BaseEntity {
   @Column()
   password: string;
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
   @OneToMany(() => CommentEntity, (comment) => comment.project, {
     cascade: true,
@@ -56,12 +56,12 @@ export class ProjectEntity extends BaseEntity {
   })
   comments: CommentEntity;
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
   @ManyToOne(() => UserEntity, (user) => user.projects)
   owner: UserEntity;
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
   @OneToMany(() => InvestEntity, (invest) => invest.project)
   invests: InvestEntity[];

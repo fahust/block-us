@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 import {
   Entity,
@@ -10,7 +10,7 @@ import {
 
 @Entity()
 export class BaseEntity {
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @PrimaryGeneratedColumn()
   id: number;
@@ -30,7 +30,7 @@ export class BaseEntity {
   @IsOptional()
   public updated_at: Date;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @Column({ default: true })
   isActive: boolean;

@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsEthereumAddress, IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
 import { CommentEntity } from 'src/comment/comment.entity';
 import { BaseEntity } from 'src/helpers/entity/base.entity';
@@ -22,7 +22,7 @@ export class UserEntity extends BaseEntity {
   @Column({ unique: true })
   name: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsUrl()
   @IsNotEmpty()
   @IsOptional()
@@ -51,15 +51,18 @@ export class UserEntity extends BaseEntity {
   @Column()
   lastName: string;
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @ManyToMany(() => CommentEntity, (comment) => comment.likes)
   comments: CommentEntity[];
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @OneToMany(() => ProjectEntity, (project) => project.owner)
   projects: ProjectEntity[];
 
-  @ApiProperty({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @OneToMany(() => InvestEntity, (invest) => invest.owner)
   invests: InvestEntity[];
 }
