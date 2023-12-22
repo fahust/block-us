@@ -29,7 +29,7 @@ export class InvestController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: InvestEntity,
+    type: [InvestEntity],
   })
   myInvests(@Request() req): Promise<Omit<InvestEntity, 'owner'>[]> {
     return this.investService.myInvests(req.user.id);
@@ -42,7 +42,7 @@ export class InvestController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: InvestEntity,
+    type: [InvestEntity],
   })
   investsOfProject(
     @Param() { projectId },
@@ -57,7 +57,7 @@ export class InvestController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: InvestEntity,
+    type: Number,
   })
   investsValueOfProject(@Param() { projectId }): Promise<number> {
     return this.investService.investsValueOfProject(projectId);
