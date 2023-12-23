@@ -83,4 +83,6 @@ export class ProjectController {
   ): Promise<Omit<ProjectEntity, 'password'>> {
     return this.projectService.create(req.user, project);
   }
+
+  //faire un cron qui check si les projet poussé sur la blockchain ont leur transaction reussi, en bouclant sur ceux trouvé dans la bdd avec validation false en allant chercher sur blockchain depuis le back en get donc pas de frais
 }

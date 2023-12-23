@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
+  IsEthereumAddress,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -17,6 +18,11 @@ import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 @Entity()
 export class ProjectEntity extends BaseEntity {
   @ApiProperty()
+  @IsEthereumAddress()
+  @Column({ unique: true })
+  address: string;
+
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
@@ -31,6 +37,22 @@ export class ProjectEntity extends BaseEntity {
   @MaxLength(3000)
   @Column()
   description: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(3000)
+  @Column()
+  mainCategory: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(3000)
+  @Column()
+  subCategory: string;
 
   @ApiPropertyOptional()
   @IsUrl()

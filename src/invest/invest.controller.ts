@@ -92,4 +92,6 @@ export class InvestController {
   ): Promise<InvestEntity> {
     return this.investService.create(req.user, invest, projectId);
   }
+
+  //faire un cron qui check si les invest poussé sur la blockchain ont leur transaction reussi
 }
