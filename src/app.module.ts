@@ -7,12 +7,14 @@ import { ProjectModule } from './project/project.module';
 import { NewsModule } from './news/news.module';
 import { CommentModule } from './comment/comment.module';
 import { InvestModule } from './invest/invest.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
         host: 'localhost',
