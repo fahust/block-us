@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { BaseEntity } from 'src/helpers/entity/base.entity';
+import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { Entity, Column, OneToMany, ManyToMany, ManyToOne } from 'typeorm';

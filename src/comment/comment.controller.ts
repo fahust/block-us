@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../authentication/guard/auth.guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommentEntity } from './comment.entity';
 
