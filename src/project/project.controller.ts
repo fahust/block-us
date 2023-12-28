@@ -13,7 +13,7 @@ import { ProjectService } from './project.service';
 import { AuthGuard } from '../authentication/guard/auth.guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProjectEntity } from './project.entity';
-import { Interval } from '@nestjs/schedule';
+import { Interval, Timeout } from '@nestjs/schedule';
 import { GetUser } from 'src/authentication/decorator/get-user.decorator';
 import { UserEntity } from 'src/user/user.entity';
 
@@ -88,11 +88,10 @@ export class ProjectController {
     return this.projectService.create(req.user, project);
   }
   
-  @Interval(1000)
-  checkTransactionIsValidate() {
-    //console.log('test')
+  @Interval(5000)
+  // @Timeout('notifications', 1)
+  checkContractIsDeployed() {
+    this.projectService.checkContractDeployTx()
   }
   
-
-  //faire un cron qui check si les projet poussé sur la blockchain ont leur transaction reussi, en bouclant sur ceux trouvé dans la bdd avec validation false en allant chercher sur blockchain depuis le back en get donc pas de frais
 }

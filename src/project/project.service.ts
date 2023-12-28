@@ -12,18 +12,26 @@ import { UserEntity } from 'src/user/user.entity';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 import { InvestService } from 'src/invest/invest.service';
+import { HelperBlockchainService } from 'src/helper/service/helper.blockchain.service';
+import dataSource from 'db/data-source';
 
 @Injectable()
 export class ProjectService {
   private saltOrRounds: number;
+  private alchemyKey: string;
+  private metamaskPrivateKey: string;
+
   constructor(
     @InjectRepository(ProjectEntity)
     private projectRepository: Repository<ProjectEntity>,
     @Inject(forwardRef(() => InvestService))
     private investService: InvestService,
     private configService: ConfigService,
+    private helperBlockchainService: HelperBlockchainService,
   ) {
     this.saltOrRounds = this.configService.get<number>('SALT_PASSWORD');
+    this.alchemyKey = this.configService.get('ALCHEMY_KEY');
+    this.metamaskPrivateKey = this.configService.get('METAMASK_PRIVATE_KEY');
   }
 
   async get(id: number): Promise<Omit<ProjectEntity, 'password'>> {
@@ -114,6 +122,48 @@ export class ProjectService {
         JSON.stringify(error?.driverError?.detail),
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  async checkContractDeployTx() {
+    const projects = await this.projectRepository
+      .createQueryBuilder('project')
+      .where('project.deployed = :deployed', { deployed: false })
+      .getMany();
+
+    if (projects.length) {
+      await dataSource.initialize();
+      const queryRunner = dataSource.createQueryRunner();
+
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      try {
+        for (const project of projects) {
+          const tx = await this.helperBlockchainService.getStatusTransaction(
+            this.alchemyKey,
+            project.txHash,
+          );
+          if (
+            !tx ||
+            tx.contractAddress !== project.walletAddress ||
+            Date.now() > project.created_at.getTime() + 86400000
+          ) {
+            await queryRunner.manager.delete(ProjectEntity, project.id);
+          } else if (tx?.status === 1) {
+            await queryRunner.manager.save(ProjectEntity, {
+              ...project,
+              deployed: true,
+            });
+          }
+        }
+
+        await queryRunner.commitTransaction();
+      } catch (err) {
+        console.log(err);
+        await queryRunner.rollbackTransaction();
+      } finally {
+        await queryRunner.release();
+      }
     }
   }
 }
