@@ -14,8 +14,6 @@ import { AuthGuard } from '../authentication/guard/auth.guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProjectEntity } from './project.entity';
 import { Interval, Timeout } from '@nestjs/schedule';
-import { GetUser } from 'src/authentication/decorator/get-user.decorator';
-import { UserEntity } from 'src/user/user.entity';
 
 @ApiHeader({ name: 'authorization', description: 'Bearer ...' })
 @ApiTags('Project')
@@ -38,7 +36,7 @@ export class ProjectController {
   search(
     @Param() { searchTerm },
     @Query() { limit = 0, skip = 0 },
-  ): Promise<Omit<ProjectEntity, 'password'>[]> {
+  ): Promise<ProjectEntity[]> {
     return this.projectService.search(searchTerm, limit, skip);
   }
 
@@ -67,7 +65,7 @@ export class ProjectController {
     status: HttpStatus.OK,
     type: ProjectEntity,
   })
-  project(@Param() { id }): Promise<Omit<ProjectEntity, 'password'>> {
+  project(@Param() { id }): Promise<ProjectEntity> {
     return this.projectService.get(id);
   }
 
@@ -81,10 +79,9 @@ export class ProjectController {
     type: ProjectEntity,
   })
   create(
-    @GetUser() user: UserEntity,
     @Request() req,
     @Body() project: ProjectEntity,
-  ): Promise<Omit<ProjectEntity, 'password'>> {
+  ): Promise<ProjectEntity> {
     return this.projectService.create(req.user, project);
   }
   
