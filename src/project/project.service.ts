@@ -14,6 +14,7 @@ import * as bcrypt from 'bcryptjs';
 import { InvestService } from 'src/invest/invest.service';
 import { HelperBlockchainService } from 'src/helper/service/helper.blockchain.service';
 import dataSource from 'db/data-source';
+import { TransactionReceipt } from 'ethers';
 
 @Injectable()
 export class ProjectService {
@@ -116,24 +117,28 @@ export class ProjectService {
       .getMany();
 
     if (projects.length) {
-      await dataSource.initialize();
+      if (!dataSource.isInitialized) await dataSource.initialize();
       const queryRunner = dataSource.createQueryRunner();
 
       await queryRunner.connect();
       await queryRunner.startTransaction();
       try {
         for (const project of projects) {
-          const txToken =
-            await this.helperBlockchainService.getStatusTransaction(
+          let txToken: TransactionReceipt;
+          let txProxy: TransactionReceipt;
+          try {
+            txToken = await this.helperBlockchainService.getStatusTransaction(
               this.alchemyKey,
               project.hashToken,
+              project.chainId,
             );
 
-          const txProxy =
-            await this.helperBlockchainService.getStatusTransaction(
+            txProxy = await this.helperBlockchainService.getStatusTransaction(
               this.alchemyKey,
               project.hashProxy,
+              project.chainId,
             );
+          } catch (error) {}
 
           if (
             !txToken ||
