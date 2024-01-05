@@ -6,6 +6,7 @@ import { ProjectEntity } from './project.entity';
 import { ConfigModule } from '@nestjs/config';
 import { InvestModule } from 'src/invest/invest.module';
 import { HelperModule } from 'src/helper/module/helper.module';
+import { VoteModule } from 'src/vote/vote.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { HelperModule } from 'src/helper/module/helper.module';
     ConfigModule,
     HelperModule,
     forwardRef(() => InvestModule),
+    forwardRef(() => VoteModule),
   ],
   controllers: [ProjectController],
   providers: [ProjectService],

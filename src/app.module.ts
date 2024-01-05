@@ -9,6 +9,7 @@ import { InvestModule } from './invest/invest.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HelperModule } from './helper/module/helper.module';
 import { AuthenticationModule } from './authentication/module/authentication.module';
+import { VoteModule } from './vote/vote.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AuthenticationModule } from './authentication/module/authentication.mod
     InvestModule,
     HelperModule,
     AuthenticationModule,
+    VoteModule,
   ],
   controllers: [],
   providers: [],

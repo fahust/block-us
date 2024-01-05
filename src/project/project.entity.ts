@@ -22,6 +22,7 @@ import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ChainId } from 'src/helper/enum/network.enum';
 import { InvestEntity } from 'src/invest/invest.entity';
 import { UserEntity } from 'src/user/user.entity';
+import { VoteEntity } from 'src/vote/vote.entity';
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 
 @Entity()
@@ -154,6 +155,11 @@ export class ProjectEntity extends BaseEntity {
   @IsOptional()
   @OneToMany(() => InvestEntity, (invest) => invest.project)
   invests: InvestEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @OneToMany(() => VoteEntity, (vote) => vote.project)
+  votes: VoteEntity[];
 }
 
 function addYears(date, years) {

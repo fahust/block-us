@@ -15,6 +15,7 @@ import { InvestEntity } from 'src/invest/invest.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { Entity, Column, ManyToMany, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { VoteEntity } from 'src/vote/vote.entity';
 
 @Entity()
 export class UserEntity extends BaseEntity {
@@ -78,4 +79,9 @@ export class UserEntity extends BaseEntity {
   @IsOptional()
   @OneToMany(() => InvestEntity, (invest) => invest.owner)
   invests: InvestEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @OneToMany(() => InvestEntity, (vote) => vote.owner)
+  votes: VoteEntity[];
 }
