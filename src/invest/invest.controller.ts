@@ -12,6 +12,7 @@ import { InvestService } from './invest.service';
 import { AuthGuard } from '../authentication/guard/auth.guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InvestEntity } from './invest.entity';
+import { Interval } from '@nestjs/schedule';
 
 @ApiHeader({ name: 'authorization', description: 'Bearer ...' })
 @ApiTags('Invest')
@@ -93,5 +94,8 @@ export class InvestController {
     return this.investService.create(req.user, invest, projectId);
   }
 
-  //faire un cron qui check si les invest poussé sur la blockchain ont leur transaction reussi
+  @Interval(5000)
+  checkContractIsDeployed() {
+    this.investService.checkValidationTx()
+  }
 }

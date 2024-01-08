@@ -10,7 +10,6 @@ import { Repository } from 'typeorm';
 import { ProjectEntity } from './project.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { ConfigService } from '@nestjs/config';
-import * as bcrypt from 'bcryptjs';
 import { InvestService } from 'src/invest/invest.service';
 import { HelperBlockchainService } from 'src/helper/service/helper.blockchain.service';
 import dataSource from 'db/data-source';
@@ -18,9 +17,7 @@ import { TransactionReceipt } from 'ethers';
 
 @Injectable()
 export class ProjectService {
-  private saltOrRounds: number;
   private alchemyKey: string;
-  private metamaskPrivateKey: string;
 
   constructor(
     @InjectRepository(ProjectEntity)
@@ -30,9 +27,7 @@ export class ProjectService {
     private configService: ConfigService,
     private helperBlockchainService: HelperBlockchainService,
   ) {
-    this.saltOrRounds = this.configService.get<number>('SALT_PASSWORD');
     this.alchemyKey = this.configService.get('ALCHEMY_KEY');
-    this.metamaskPrivateKey = this.configService.get('METAMASK_PRIVATE_KEY');
   }
 
   async get(id: number): Promise<ProjectEntity> {
