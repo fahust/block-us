@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { VoteEntity } from './vote.entity';
 import { ProjectModule } from 'src/project/project.module';
 import { ConfigModule } from '@nestjs/config';
+import { HelperModule } from 'src/helper/module/helper.module';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([VoteEntity]),
     forwardRef(() => ProjectModule),
+    HelperModule,
   ],
   controllers: [VoteController],
   providers: [VoteService],

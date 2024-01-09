@@ -10,15 +10,24 @@ import { Repository } from 'typeorm';
 import { VoteEntity } from './vote.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { ProjectService } from 'src/project/project.service';
+import { TransactionReceipt } from 'ethers';
+import dataSource from 'db/data-source';
+import { HelperBlockchainService } from 'src/helper/service/helper.blockchain.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class VoteService {
+  private alchemyKey: string;
   constructor(
     @InjectRepository(VoteEntity)
     private voteRepository: Repository<VoteEntity>,
     @Inject(forwardRef(() => ProjectService))
     private projectService: ProjectService,
-  ) {}
+    private helperBlockchainService: HelperBlockchainService,
+    private configService: ConfigService,
+  ) {
+    this.alchemyKey = this.configService.get('ALCHEMY_KEY');
+  }
 
   async get(id: number): Promise<VoteEntity> {
     return this.voteRepository
@@ -85,6 +94,53 @@ export class VoteService {
         JSON.stringify(error?.driverError?.detail),
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  async checkValidationTx() {
+    const votes = await this.voteRepository
+      .createQueryBuilder('vote')
+      .where('vote.validation = :validation', { validation: false })
+      .getMany();
+
+    if (votes.length) {
+      if (!dataSource.isInitialized) await dataSource.initialize();
+      const queryRunner = dataSource.createQueryRunner();
+
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      try {
+        for (const vote of votes) {
+          let tx: TransactionReceipt;
+          try {
+            tx = await this.helperBlockchainService.getStatusTransaction(
+              this.alchemyKey,
+              vote.hash,
+              vote.chainId,
+            );
+          } catch (error) {}
+
+          if (
+            !tx ||
+            tx.contractAddress !== vote.project.walletAddressProxy ||
+            Date.now() > vote.created_at.getTime() + 86400000
+          ) {
+            await queryRunner.manager.delete(VoteEntity, vote.id);
+          } else if (tx?.status === 1 && tx?.status === 1) {
+            await queryRunner.manager.save(VoteEntity, {
+              ...vote,
+              validation: true,
+            });
+          }
+        }
+
+        await queryRunner.commitTransaction();
+      } catch (err) {
+        console.log(err);
+        await queryRunner.rollbackTransaction();
+      } finally {
+        await queryRunner.release();
+      }
     }
   }
 }

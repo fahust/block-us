@@ -12,6 +12,7 @@ import { VoteService } from './vote.service';
 import { AuthGuard } from '../authentication/guard/auth.guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VoteEntity } from './vote.entity';
+import { Interval } from '@nestjs/schedule';
 
 @ApiHeader({ name: 'authorization', description: 'Bearer ...' })
 @ApiTags('Vote')
@@ -93,5 +94,8 @@ export class VoteController {
     return this.voteService.create(req.user, vote, projectId);
   }
 
-  //faire un cron qui check si les vote poussé sur la blockchain ont leur transaction reussi
+  @Interval(5000)
+  checkContractIsDeployed() {
+    this.voteService.checkValidationTx()
+  }
 }
