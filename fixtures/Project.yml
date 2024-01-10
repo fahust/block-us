@@ -1,0 +1,48 @@
+entity: ProjectEntity
+items:
+  project0:
+    walletAddressToken: '0xC5299f758c752902FE1f7a18922dE0defF8245D7'
+    walletAddressProxy: '0x089767A98C6CAb59b429485d6360ab2243e6c4Ef'
+    hashToken: '0x77a5803487396d3445d7dbeed38fc2700922ce3d31b0125a2f055f1ea9f67db0'
+    hashProxy: '0xf07bbed0aa071554e7129dd6f0f629fa05cc55fabae0ef4807883328ca916a99'
+    chainId: 5
+    title: '{{music.genre}}'
+    description: '{{lorem.lines}}'
+    mainCategory: '{{lorem.word}}'
+    subCategory: '{{lorem.word}}'
+    image: 'http://solidso.mefound.com/board-game-api/src/images/lands/cave.webp'
+    createdAt: '2023-09-22 17:51:33.968'
+    updatedAt: '2023-09-22 17:51:33.968'
+    startFundraising: '2023-09-22 17:51:33.968'
+    endFundraising: '2024-09-22 17:51:33.968'
+    maxSupply: 1000
+    deployed: true
+    pausable: true
+    rulesModifiable: true
+    voteToWithdraw: true
+    dayToWithdraw: 0
+    isActive: true
+    #invests: '@invest0'
+    owner: '@user0'
+  project{1..15}:
+    walletAddressToken: '{{finance.ethereumAddress}}'
+    walletAddressProxy: '{{finance.ethereumAddress}}'
+    hashToken: '{{finance.ethereumAddress}}'
+    hashProxy: '{{finance.ethereumAddress}}'
+    chainId: 5
+    title: '{{music.genre}}'
+    description: '{{lorem.lines}}'
+    mainCategory: '{{lorem.word}}'
+    subCategory: '{{lorem.word}}'
+    image: '{{image.avatar}}'
+    startFundraising: '2023-08-08 00:00:00'
+    endFundraising: '2025-08-08 00:00:00'
+    maxSupply: 1000
+    deployed: true
+    pausable: {{datatype.boolean}}
+    rulesModifiable: {{datatype.boolean}}
+    voteToWithdraw: {{datatype.boolean}}
+    dayToWithdraw: 0
+    isActive: true
+    #invests: '@invest*'
+    owner: '@user*'

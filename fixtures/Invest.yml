@@ -1,0 +1,9 @@
+entity: InvestEntity
+items:
+  invest{0..100}:
+    hash: '{{finance.ethereumAddress}}'
+    value: '{{datatype.number(100000)}}'
+    validation: true
+    chainId: 5
+    project: '@project*'
+    owner: '@user*'
