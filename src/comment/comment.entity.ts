@@ -40,7 +40,7 @@ export class CommentEntity extends BaseEntity {
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
-  @ManyToMany(() => UserEntity, (user) => user.comments, {
+  @ManyToMany(() => UserEntity, (user) => user.commentsLiked, {
     cascade: true,
     eager: true,
   })

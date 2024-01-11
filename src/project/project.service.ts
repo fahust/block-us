@@ -34,6 +34,10 @@ export class ProjectService {
     return this.projectRepository
       .createQueryBuilder('project')
       .where('project.id = :id', { id })
+      .leftJoinAndSelect('project.invests', 'invests')
+      .leftJoinAndSelect('project.news', 'news')
+      .leftJoinAndSelect('project.comments', 'comments')
+      .loadRelationCountAndMap('project.likes', 'project.likesCount')
       .getOne();
   }
 

@@ -10,7 +10,8 @@ import {
 } from 'class-validator';
 import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { UserEntity } from 'src/user/user.entity';
+import { Entity, Column, ManyToOne,ManyToMany } from 'typeorm';
 
 @Entity()
 export class NewsEntity extends BaseEntity {
@@ -48,4 +49,12 @@ export class NewsEntity extends BaseEntity {
     orphanedRowAction: 'soft-delete',
   })
   project: ProjectEntity;
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @ManyToMany(() => UserEntity, (user) => user.newsLiked, {
+    cascade: true,
+    eager: true,
+  })
+  likes: UserEntity[];
 }
