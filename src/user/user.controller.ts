@@ -33,6 +33,6 @@ export class UserController {
     type: UserEntity,
   })
   get(@Request() req) {
-    return this.userService.get(req.user.id);
+    return this.userService.getMyAccount(req.user.id);
   }
 }

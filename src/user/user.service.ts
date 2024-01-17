@@ -17,6 +17,17 @@ export class UserService {
       .getOne();
   }
 
+  async getMyAccount(id: number): Promise<UserEntity> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .leftJoinAndSelect('user.projects', 'projects')
+      .leftJoinAndSelect('user.invests', 'invests', null, { limit: 10 })
+      .leftJoinAndSelect('user.votes', 'votes', null, { limit: 10 })
+      .leftJoinAndSelect('user.comments', 'comments', null, { limit: 10 })
+      .getOne();
+  }
+
   async findByAddress(walletAddress: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder('user')
