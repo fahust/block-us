@@ -7,6 +7,8 @@ items:
     project: '@project*'
     public: true
     isActive: true
+    likes: 
+      - '@user*'
   news{10..20}:
     title: '{{lorem.word}}'
     content: '{{lorem.paragraphs}}'
@@ -14,4 +16,6 @@ items:
     project: '@project*'
     public: false
     isActive: true
+    likes: 
+      - '@user*'
     #likes: '@user*'

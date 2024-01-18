@@ -1,5 +1,4 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
@@ -24,28 +23,43 @@ import { InvestEntity } from 'src/invest/invest.entity';
 import { NewsEntity } from 'src/news/news.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { VoteEntity } from 'src/vote/vote.entity';
-import { Entity, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToMany,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+  Unique,
+} from 'typeorm';
 
 @Entity()
+@Unique('project_address_hash_index', [
+  'walletAddressToken',
+  'walletAddressProxy',
+  'hashToken',
+  'hashProxy',
+  'chainId',
+])
 export class ProjectEntity extends BaseEntity {
   @ApiProperty()
   @IsEthereumAddress()
-  @Column({ unique: true })
+  @Column()
   walletAddressToken: string;
 
   @ApiProperty()
   @IsEthereumAddress()
-  @Column({ unique: true })
+  @Column()
   walletAddressProxy: string;
 
   @ApiProperty()
   @IsString()
-  @Column({ unique: true })
+  @Column()
   hashToken: string;
 
   @ApiProperty()
   @IsString()
-  @Column({ unique: true })
+  @Column()
   hashProxy: string;
 
   @ApiProperty()
@@ -173,6 +187,7 @@ export class ProjectEntity extends BaseEntity {
     cascade: true,
     eager: true,
   })
+  @JoinTable()
   likes: UserEntity[];
 }
 

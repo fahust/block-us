@@ -1,9 +1,22 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { BaseEntity } from 'src/helper/entity/base.entity';
 import { ProjectEntity } from 'src/project/project.entity';
 import { UserEntity } from 'src/user/user.entity';
-import { Entity, Column, OneToMany, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToMany,
+  ManyToMany,
+  ManyToOne,
+  JoinTable,
+} from 'typeorm';
 
 @Entity()
 export class CommentEntity extends BaseEntity {
@@ -44,6 +57,7 @@ export class CommentEntity extends BaseEntity {
     cascade: true,
     eager: true,
   })
+  @JoinTable()
   likes: UserEntity[];
 
   @ApiPropertyOptional({ type: 'object' })
@@ -55,6 +69,9 @@ export class CommentEntity extends BaseEntity {
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
-  @ManyToOne(() => UserEntity, (user) => user.comments)
+  @ManyToOne(() => UserEntity, (user) => user.comments, {
+    cascade: true,
+    eager: true,
+  })
   owner: UserEntity;
 }

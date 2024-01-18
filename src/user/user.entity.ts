@@ -68,7 +68,7 @@ export class UserEntity extends BaseEntity {
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
-  @ManyToMany(() => CommentEntity, (comment) => comment.owner)
+  @OneToMany(() => CommentEntity, (comment) => comment.owner)
   comments: CommentEntity[];
 
   @ApiPropertyOptional({ type: 'object' })
