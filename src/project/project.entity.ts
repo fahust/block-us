@@ -79,7 +79,7 @@ export class ProjectEntity extends BaseEntity {
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
-  @MaxLength(3000)
+  @MaxLength(10000)
   @Column()
   description: string;
 
@@ -87,7 +87,15 @@ export class ProjectEntity extends BaseEntity {
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
-  @MaxLength(3000)
+  @MaxLength(256)
+  @Column()
+  shortDescription: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(100)
   @Column()
   mainCategory: string;
 
@@ -95,7 +103,7 @@ export class ProjectEntity extends BaseEntity {
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
-  @MaxLength(3000)
+  @MaxLength(100)
   @Column()
   subCategory: string;
 

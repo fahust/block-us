@@ -7,8 +7,9 @@ items:
     hashProxy: '0xf07bbed0aa071554e7129dd6f0f629fa05cc55fabae0ef4807883328ca916a99'
     chainId: 5
     title: '{{music.genre}}'
-    description: '{{lorem.lines}}'
-    mainCategory: '{{lorem.word}}'
+    description: '{{lorem.paragraphs}}'
+    shortDescription: '{{lorem.lines}}'
+    mainCategory: 'game'
     subCategory: '{{lorem.word}}'
     image: 'http://solidso.mefound.com/board-game-api/src/images/lands/cave.webp'
     createdAt: '2023-09-22 17:51:33.968'
@@ -33,8 +34,9 @@ items:
     hashProxy: '{{finance.ethereumAddress}}'
     chainId: 5
     title: '{{music.genre}}'
-    description: '{{lorem.lines}}'
-    mainCategory: '{{lorem.word}}'
+    description: '{{lorem.paragraphs}}'
+    shortDescription: '{{lorem.lines}}'
+    mainCategory: 'web3'
     subCategory: '{{lorem.word}}'
     image: '{{image.avatar}}'
     startFundraising: '2023-08-08 00:00:00'

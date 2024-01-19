@@ -37,7 +37,7 @@ export class ProjectService {
       .leftJoinAndSelect('project.invests', 'invests')
       .leftJoinAndSelect('project.news', 'news')
       .leftJoinAndSelect('project.comments', 'comments')
-      .loadRelationCountAndMap('project.likes', 'project.likesCount')
+      .loadRelationCountAndMap('project.likes', 'project.likes')
       .getOne();
   }
 
@@ -54,9 +54,9 @@ export class ProjectService {
       .orWhere('project.title ILIKE :searchTerm', {
         searchTerm: `%${searchTerm}%`,
       })
-      .loadRelationCountAndMap('project.news', 'project.newsCount')
-      .loadRelationCountAndMap('project.comments', 'project.commentsCount')
-      .loadRelationCountAndMap('project.likes', 'project.likesCount')
+      .loadRelationCountAndMap('project.news', 'project.news')
+      .loadRelationCountAndMap('project.comments', 'project.comments')
+      .loadRelationCountAndMap('project.likes', 'project.likes')
       .limit(limit)
       .skip(skip)
       .getMany();
@@ -69,12 +69,12 @@ export class ProjectService {
   ): Promise<ProjectEntity[]> {
     return this.projectRepository
       .createQueryBuilder('project')
-      .where('project.description = :mainCategory', {
+      .where('project.mainCategory = :mainCategory', {
         mainCategory,
       })
-      .loadRelationCountAndMap('project.news', 'project.newsCount')
-      .loadRelationCountAndMap('project.comments', 'project.commentsCount')
-      .loadRelationCountAndMap('project.likes', 'project.likesCount')
+      .loadRelationCountAndMap('project.news', 'project.news')
+      .loadRelationCountAndMap('project.comments', 'project.comments')
+      .loadRelationCountAndMap('project.likes', 'project.likes')
       .limit(limit)
       .skip(skip)
       .getMany();
