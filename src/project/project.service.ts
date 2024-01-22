@@ -34,15 +34,47 @@ export class ProjectService {
     return this.projectRepository
       .createQueryBuilder('project')
       .where('project.id = :id', { id })
-      .leftJoinAndSelect('project.invests', 'invests')
-      .leftJoinAndSelect('project.news', 'news')
-      .leftJoinAndSelect('project.comments', 'comments')
+      .leftJoin('project.invests', 'invests')
+      .leftJoin('project.owner', 'owner')
+      .leftJoin('project.news', 'news')
+      .leftJoin('project.comments', 'comments')
+      .select([
+        'project.id',
+        'project.walletAddressToken',
+        'project.walletAddressProxy',
+        'project.hashToken',
+        'project.hashProxy',
+        'project.chainId',
+        'project.title',
+        'project.description',
+        'project.shortDescription',
+        'project.mainCategory',
+        'project.subCategory',
+        'project.image',
+        'project.startFundraising',
+        'project.endFundraising',
+        'project.maxSupply',
+        'invests.id',
+        'invests.value',
+        'invests.validation',
+        'owner.id',
+        'news.id',
+        'news.title',
+        'news.content',
+        'news.image',
+        'comments.id',
+        'comments.title',
+        'comments.content',
+      ])
       .loadRelationCountAndMap('project.likes', 'project.likes')
+      .loadRelationCountAndMap('news.likes', 'news.likes')
+      .loadRelationCountAndMap('comments.likes', 'comments.likes')
       .getOne();
   }
 
   async search(
     searchTerm: number,
+    userId: number,
     limit: number,
     skip: number,
   ): Promise<ProjectEntity[]> {
@@ -51,12 +83,40 @@ export class ProjectService {
       .where('project.description like :searchTerm', {
         searchTerm: `%${searchTerm}%`,
       })
+      .orWhere('project.shortDescription ILIKE :searchTerm', {
+        searchTerm: `%${searchTerm}%`,
+      })
       .orWhere('project.title ILIKE :searchTerm', {
         searchTerm: `%${searchTerm}%`,
       })
+      .leftJoin('project.news', 'news')
+      .leftJoin('project.comments', 'comments')
+      .select([
+        'project.id',
+        'project.title',
+        'project.shortDescription',
+        'project.mainCategory',
+        'project.subCategory',
+        'project.image',
+        'project.startFundraising',
+        'project.endFundraising',
+        'project.maxSupply',
+        'owner.id',
+      ])
       .loadRelationCountAndMap('project.news', 'project.news')
       .loadRelationCountAndMap('project.comments', 'project.comments')
       .loadRelationCountAndMap('project.likes', 'project.likes')
+      .loadRelationCountAndMap('news.likes', 'news.likes')
+      .loadRelationCountAndMap('comments.likes', 'comments.likes')
+      .leftJoinAndMapOne(
+        'project.liked',
+        'project.likes',
+        'likes',
+        'likes.id = :userId',
+        {
+          userId,
+        },
+      )
       .limit(limit)
       .skip(skip)
       .getMany();
@@ -64,6 +124,7 @@ export class ProjectService {
 
   async byCategory(
     mainCategory: number,
+    userId: number,
     limit: number,
     skip: number,
   ): Promise<ProjectEntity[]> {
@@ -72,9 +133,31 @@ export class ProjectService {
       .where('project.mainCategory = :mainCategory', {
         mainCategory,
       })
+      .leftJoin('project.owner', 'owner')
+      .select([
+        'project.id',
+        'project.title',
+        'project.shortDescription',
+        'project.mainCategory',
+        'project.subCategory',
+        'project.image',
+        'project.startFundraising',
+        'project.endFundraising',
+        'project.maxSupply',
+        'owner.id',
+      ])
       .loadRelationCountAndMap('project.news', 'project.news')
       .loadRelationCountAndMap('project.comments', 'project.comments')
       .loadRelationCountAndMap('project.likes', 'project.likes')
+      .leftJoinAndMapOne(
+        'project.liked',
+        'project.likes',
+        'likes',
+        'likes.id = :userId',
+        {
+          userId,
+        },
+      )
       .limit(limit)
       .skip(skip)
       .getMany();
@@ -93,14 +176,11 @@ export class ProjectService {
     return isInvest ? true : false;
   }
 
-  async isOwner(
-    userId: number,
-    projectId: number,
-  ): Promise<Omit<ProjectEntity, 'password' | 'owner'>> {
+  async isOwner(userId: number, projectId: number): Promise<ProjectEntity> {
     try {
       return this.projectRepository
         .createQueryBuilder('project')
-        .leftJoinAndSelect('project.owner', 'owner')
+        .leftJoin('project.owner', 'owner')
         .where('project.id = :projectId', { projectId })
         .andWhere('owner.id = :userId', { userId })
         .getOneOrFail();
@@ -119,6 +199,35 @@ export class ProjectService {
     });
   }
 
+  async like(user: UserEntity, projectId: number): Promise<ProjectEntity> {
+    const project = await this.projectRepository
+      .createQueryBuilder('project')
+      .where('project.id = :projectId', { projectId })
+      .leftJoinAndMapOne(
+        'project.liked',
+        'project.likes',
+        'liked',
+        'liked.id = :userId',
+        {
+          userId: user.id,
+        },
+      )
+      .leftJoinAndSelect('project.likes', 'likes')
+      .getOneOrFail();
+
+    const alreadyLiked = project.likes.find((like) => like.id === user.id);
+
+    if (alreadyLiked) {
+      project.likes = project.likes.filter((like) => like.id !== user.id);
+      project.liked = null;
+    } else {
+      project.likes.push(user);
+      project.liked = user;
+    }
+    await this.save(project);
+    return project;
+  }
+
   async save(project: ProjectEntity): Promise<ProjectEntity> {
     try {
       return await this.projectRepository.save(project);
@@ -134,6 +243,15 @@ export class ProjectService {
     const projects = await this.projectRepository
       .createQueryBuilder('project')
       .where('project.deployed = :deployed', { deployed: false })
+      .select([
+        'project.id',
+        'project.hashToken',
+        'project.hashProxy',
+        'project.walletAddressToken',
+        'project.walletAddressProxy',
+        'project.chainId',
+        'project.created_at',
+      ])
       .getMany();
 
     if (projects.length) {

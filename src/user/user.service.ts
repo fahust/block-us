@@ -21,11 +21,27 @@ export class UserService {
     return this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
-      .leftJoinAndSelect('user.projects', 'projects')
-      .leftJoinAndSelect('user.invests', 'invests', null, { limit: 10 })
-      .leftJoinAndSelect('invests.project', 'investProject')
-      .leftJoinAndSelect('user.votes', 'votes', null, { limit: 10 })
-      .leftJoinAndSelect('user.comments', 'comments', null, { limit: 10 })
+      .leftJoin('user.projects', 'projects')
+      .leftJoin('user.invests', 'invests', null, { limit: 10 })
+      .leftJoin('invests.project', 'investProject')
+      .leftJoin('user.votes', 'votes', null, { limit: 10 })
+      .leftJoin('user.comments', 'comments', null, { limit: 10 })
+      .select([
+        'user.id',
+        'projects.id',
+        'projects.title',
+        'projects.walletAddressToken',
+        'projects.walletAddressProxy',
+        'invests.id',
+        'invests.hash',
+        'invests.value',
+        'invests.chainId',
+        'invests.created_at',
+        'investProject.id',
+        'investProject.title',
+        'investProject.walletAddressToken',
+        'investProject.walletAddressProxy',
+      ])
       .getOne();
   }
 

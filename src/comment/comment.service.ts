@@ -14,6 +14,12 @@ export class CommentService {
     return this.commentRepository
       .createQueryBuilder('comment')
       .where('comment.id = :id', { id })
+      .select([
+        'comment.id',
+        'comment.title',
+        'comment.content',
+        'comment.created_at',
+      ])
       .getOne();
   }
 

@@ -18,24 +18,24 @@ import { Entity, Column, ManyToOne, Unique } from 'typeorm';
 export class VoteEntity extends BaseEntity {
   @ApiProperty()
   @IsString()
-  @Column()
+  @Column({ select: false })
   hash: string;
 
   @ApiProperty()
   @IsNumber()
   @NotEquals(0)
-  @Column()
+  @Column({ select: false })
   value: number;
 
   @ApiPropertyOptional()
   @IsBoolean()
   @IsOptional()
-  @Column({ default: false })
+  @Column({ default: false, select: false })
   validation: boolean;
 
   @ApiProperty()
   @IsEnum(ChainId)
-  @Column()
+  @Column({ select: false })
   chainId: ChainId;
 
   @ApiPropertyOptional({ type: 'object' })

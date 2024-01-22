@@ -33,6 +33,7 @@ export class VoteService {
     return this.voteRepository
       .createQueryBuilder('vote')
       .where('vote.id = :id', { id })
+      .select(['vote.id', 'vote.value', 'vote.chainId', 'vote.created_at'])
       .getOne();
   }
 
@@ -52,8 +53,9 @@ export class VoteService {
   async myVotes(ownerId: number): Promise<Omit<VoteEntity, 'owner'>[]> {
     const votes = await this.voteRepository
       .createQueryBuilder('vote')
-      .leftJoinAndSelect('vote.owner', 'owner')
+      .leftJoin('vote.owner', 'owner')
       .where('owner.id = :ownerId', { ownerId })
+      .select(['vote.id', 'vote.value', 'vote.chainId', 'vote.created_at'])
       .getMany();
     return votes.map((i) => {
       const { owner: _, ...vote } = i;
@@ -66,9 +68,10 @@ export class VoteService {
   ): Promise<Omit<VoteEntity, 'owner' | 'project'>[]> {
     const votes = await this.voteRepository
       .createQueryBuilder('vote')
-      .leftJoinAndSelect('vote.project', 'project')
+      .leftJoin('vote.project', 'project')
       .where('project.id = :projectId', { projectId })
       .andWhere('vote.validation = :validation', { validation: true })
+      .select(['vote.id', 'vote.value', 'vote.chainId', 'vote.created_at'])
       .getMany();
 
     return votes.map((i) => {
@@ -101,6 +104,14 @@ export class VoteService {
     const votes = await this.voteRepository
       .createQueryBuilder('vote')
       .where('vote.validation = :validation', { validation: false })
+      .leftJoin('vote.project', 'project')
+      .select([
+        'vote.id',
+        'vote.hash',
+        'vote.chainId',
+        'vote.created_at',
+        'project.walletAddressProxy',
+      ])
       .getMany();
 
     if (votes.length) {

@@ -13,7 +13,6 @@ import { ProjectService } from 'src/project/project.service';
 import dataSource from 'db/data-source';
 import { TransactionReceipt } from 'ethers';
 import { HelperBlockchainService } from 'src/helper/service/helper.blockchain.service';
-import { VoteEntity } from 'src/vote/vote.entity';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -34,6 +33,13 @@ export class InvestService {
     return this.investRepository
       .createQueryBuilder('invest')
       .where('invest.id = :id', { id })
+      .select([
+        'invest.id',
+        'invest.hash',
+        'invest.value',
+        'invest.chainId',
+        'invest.created_at',
+      ])
       .getOne();
   }
 
@@ -50,36 +56,51 @@ export class InvestService {
     });
   }
 
-  async myInvests(ownerId: number): Promise<Omit<InvestEntity, 'owner'>[]> {
-    const invests = await this.investRepository
+  async myInvests(
+    ownerId: number,
+    limit: number,
+    skip: number,
+  ): Promise<InvestEntity[]> {
+    return await this.investRepository
       .createQueryBuilder('invest')
-      .leftJoinAndSelect('invest.owner', 'owner')
+      .leftJoin('invest.owner', 'owner')
       .where('owner.id = :ownerId', { ownerId })
+      .select([
+        'invest.id',
+        'invest.hash',
+        'invest.value',
+        'invest.chainId',
+        'invest.created_at',
+      ])
+      .limit(limit)
+      .skip(skip)
       .getMany();
-    return invests.map((i) => {
-      const { owner: _, ...invest } = i;
-      return invest;
-    });
   }
 
   async investsOfProject(
     projectId: number,
-  ): Promise<Omit<InvestEntity, 'owner' | 'project'>[]> {
-    const invests = await this.investRepository
+    limit: number,
+    skip: number,
+  ): Promise<InvestEntity[]> {
+    return this.investRepository
       .createQueryBuilder('invest')
-      .leftJoinAndSelect('invest.project', 'project')
+      .leftJoin('invest.project', 'project')
       .where('project.id = :projectId', { projectId })
       .andWhere('invest.validation = :validation', { validation: true })
+      .select([
+        'invest.id',
+        'invest.hash',
+        'invest.chainId',
+        'invest.created_at',
+        'project.walletAddressProxy',
+      ])
+      .limit(limit)
+      .skip(skip)
       .getMany();
-
-    return invests.map((i) => {
-      const { owner: _, project: __, ...invest } = i;
-      return invest;
-    });
   }
 
   async investsValueOfProject(projectId: number): Promise<number> {
-    const invests = await this.investsOfProject(projectId);
+    const invests = await this.investsOfProject(projectId, 0, 0);
 
     return invests.reduce(
       (accumulator, currentValue) => accumulator + currentValue.value,
@@ -101,7 +122,15 @@ export class InvestService {
   async checkValidationTx() {
     const invests = await this.investRepository
       .createQueryBuilder('invest')
+      .leftJoin('invest.project', 'project')
       .where('invest.validation = :validation', { validation: false })
+      .select([
+        'invest.id',
+        'invest.hash',
+        'invest.chainId',
+        'invest.created_at',
+        'project.walletAddressProxy',
+      ])
       .getMany();
 
     if (invests.length) {
@@ -119,16 +148,18 @@ export class InvestService {
               invest.hash,
               invest.chainId,
             );
-          } catch (error) {}
+          } catch (error) {
+            console.log(error);
+          }
 
           if (
             !tx ||
-            tx.contractAddress !== invest.project.walletAddressProxy ||
+            tx.to !== invest.project.walletAddressProxy ||
             Date.now() > invest.created_at.getTime() + 86400000
           ) {
-            await queryRunner.manager.delete(VoteEntity, invest.id);
+            await queryRunner.manager.delete(InvestEntity, invest.id);
           } else if (tx?.status === 1 && tx?.status === 1) {
-            await queryRunner.manager.save(VoteEntity, {
+            await queryRunner.manager.save(InvestEntity, {
               ...invest,
               validation: true,
             });

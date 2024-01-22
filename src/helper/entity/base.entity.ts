@@ -16,6 +16,7 @@ export class BaseEntity {
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
+    select: false,
   })
   @IsOptional()
   public created_at: Date;
@@ -24,12 +25,8 @@ export class BaseEntity {
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
+    select: false,
   })
   @IsOptional()
   public updated_at: Date;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @Column({ default: true })
-  isActive: boolean;
 }

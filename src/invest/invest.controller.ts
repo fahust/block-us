@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -32,8 +33,11 @@ export class InvestController {
     status: HttpStatus.OK,
     type: [InvestEntity],
   })
-  myInvests(@Request() req): Promise<Omit<InvestEntity, 'owner'>[]> {
-    return this.investService.myInvests(req.user.id);
+  myInvests(
+    @Request() req,
+    @Query() { limit = 0, skip = 0 },
+  ): Promise<InvestEntity[]> {
+    return this.investService.myInvests(req.user.id, limit, skip);
   }
 
   @UseGuards(AuthGuard)
@@ -47,8 +51,9 @@ export class InvestController {
   })
   investsOfProject(
     @Param() { projectId },
-  ): Promise<Omit<InvestEntity, 'owner' | 'project'>[]> {
-    return this.investService.investsOfProject(projectId);
+    @Query() { limit = 0, skip = 0 },
+  ): Promise<InvestEntity[]> {
+    return this.investService.investsOfProject(projectId, limit, skip);
   }
 
   @UseGuards(AuthGuard)
@@ -96,6 +101,6 @@ export class InvestController {
 
   @Interval(5000)
   checkContractIsDeployed() {
-    this.investService.checkValidationTx()
+    this.investService.checkValidationTx();
   }
 }
