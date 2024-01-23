@@ -28,19 +28,19 @@ export class NewsEntity extends BaseEntity {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(3000)
-  @Column({ select: false })
+  @Column()
   content: string;
 
   @ApiPropertyOptional()
   @IsUrl()
   @IsNotEmpty()
   @IsOptional()
-  @Column({ nullable: true, select: false })
+  @Column({ nullable: true })
   image: string;
 
   @ApiProperty()
   @IsBoolean()
-  @Column({ default: true, select: false })
+  @Column({ default: true })
   public: boolean;
 
   @ApiPropertyOptional({ type: 'object' })
@@ -55,7 +55,6 @@ export class NewsEntity extends BaseEntity {
   @JoinTable()
   @ManyToMany(() => UserEntity, (user) => user.newsLiked, {
     cascade: true,
-    eager: true,
   })
   likes: UserEntity[];
 }
