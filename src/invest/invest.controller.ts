@@ -35,9 +35,9 @@ export class InvestController {
   })
   myInvests(
     @Request() req,
-    @Query() { limit = 0, skip = 0 },
+    @Query() { take = 0, skip = 0 },
   ): Promise<InvestEntity[]> {
-    return this.investService.myInvests(req.user.id, limit, skip);
+    return this.investService.myInvests(req.user.id, take, skip);
   }
 
   @UseGuards(AuthGuard)
@@ -51,9 +51,9 @@ export class InvestController {
   })
   investsOfProject(
     @Param() { projectId },
-    @Query() { limit = 0, skip = 0 },
+    @Query() { take = 0, skip = 0 },
   ): Promise<InvestEntity[]> {
-    return this.investService.investsOfProject(projectId, limit, skip);
+    return this.investService.investsOfProject(projectId, take, skip);
   }
 
   @UseGuards(AuthGuard)

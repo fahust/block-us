@@ -75,7 +75,7 @@ export class ProjectService {
   async search(
     searchTerm: number,
     userId: number,
-    limit: number,
+    take: number,
     skip: number,
   ): Promise<ProjectEntity[]> {
     return this.projectRepository
@@ -117,7 +117,7 @@ export class ProjectService {
           userId,
         },
       )
-      .limit(limit)
+      .take(take)
       .skip(skip)
       .getMany();
   }
@@ -125,7 +125,7 @@ export class ProjectService {
   async byCategory(
     mainCategory: number,
     userId: number,
-    limit: number,
+    take: number,
     skip: number,
   ): Promise<ProjectEntity[]> {
     return this.projectRepository
@@ -158,7 +158,7 @@ export class ProjectService {
           userId,
         },
       )
-      .limit(limit)
+      .take(take)
       .skip(skip)
       .getMany();
   }
