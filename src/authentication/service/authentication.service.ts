@@ -60,7 +60,7 @@ export class AuthenticationService {
   }
 
   async createAccessToken(payload: Record<string, any>): Promise<string> {
-    return await this.jwt.signAsync(payload, {
+    return this.jwt.signAsync(payload, {
       secret: this.accessTokenSecretToken,
       expiresIn: this.accessTokenExpirationTime,
     });
@@ -135,7 +135,7 @@ export class AuthenticationService {
   }
 
   async getCachedRefreshTokenHash(walletAddress: string): Promise<string> {
-    return await this.cacheManager.get(this.jwtCacheKey(walletAddress));
+    return this.cacheManager.get(this.jwtCacheKey(walletAddress));
   }
 
   async deleteCachedRefreshTokenHash(walletAddress: string): Promise<void> {

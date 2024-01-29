@@ -6,7 +6,7 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, QueryRunner } from 'typeorm';
 import { InvestEntity } from './invest.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { ProjectService } from 'src/project/project.service';
@@ -14,6 +14,7 @@ import dataSource from 'db/data-source';
 import { TransactionReceipt } from 'ethers';
 import { HelperBlockchainService } from 'src/helper/service/helper.blockchain.service';
 import { ConfigService } from '@nestjs/config';
+import { NotificationEntity } from 'src/notification/notification.entity';
 
 @Injectable()
 export class InvestService {
@@ -61,7 +62,7 @@ export class InvestService {
     take: number,
     skip: number,
   ): Promise<InvestEntity[]> {
-    return await this.investRepository
+    return this.investRepository
       .createQueryBuilder('invest')
       .leftJoin('invest.owner', 'owner')
       .where('owner.id = :ownerId', { ownerId })
@@ -110,7 +111,7 @@ export class InvestService {
 
   async save(invest: InvestEntity): Promise<InvestEntity> {
     try {
-      return await this.investRepository.save(invest);
+      return this.investRepository.save(invest);
     } catch (error) {
       throw new HttpException(
         JSON.stringify(error?.driverError?.detail),
@@ -123,13 +124,21 @@ export class InvestService {
     const invests = await this.investRepository
       .createQueryBuilder('invest')
       .leftJoin('invest.project', 'project')
+      .leftJoin('project.owner', 'projectOwner')
+      .leftJoin('project.invests', 'projectInvests')
+      .leftJoin('projectInvests.owner', 'projectInvestsOwner')
       .where('invest.validation = :validation', { validation: false })
       .select([
         'invest.id',
         'invest.hash',
+        'invest.value',
         'invest.chainId',
         'invest.created_at',
         'project.walletAddressProxy',
+        'project.title',
+        'projectOwner.id',
+        'projectInvests.id',
+        'projectInvestsOwner.id',
       ])
       .getMany();
 
@@ -159,6 +168,7 @@ export class InvestService {
           ) {
             await queryRunner.manager.delete(InvestEntity, invest.id);
           } else if (tx?.status === 1 && tx?.status === 1) {
+            await this.sendNotification(invest, queryRunner);
             await queryRunner.manager.save(InvestEntity, {
               ...invest,
               validation: true,
@@ -174,5 +184,31 @@ export class InvestService {
         await queryRunner.release();
       }
     }
+  }
+
+  private async sendNotification(
+    invest: InvestEntity,
+    queryRunner: QueryRunner,
+  ) {
+    const uniqueInvestors = invest.project.invests?.filter(
+      (i1, index) =>
+        invest.project.invests.findIndex(
+          (i2: InvestEntity) => i1?.owner.id === i2?.owner.id,
+        ) === index,
+    );
+
+    for (const investor of uniqueInvestors) {
+      const notification = new NotificationEntity();
+      notification.owner = investor.owner;
+      notification.project = invest.project;
+      notification.content = `New investment of ${invest.value} wei for project ${invest.project.title}`;
+      await queryRunner.manager.save(NotificationEntity, notification);
+    }
+
+    const notification = new NotificationEntity();
+    notification.owner = invest.project.owner;
+    notification.project = invest.project;
+    notification.content = `New investment of ${invest.value} wei for your project ${invest.project.title}`;
+    await queryRunner.manager.save(NotificationEntity, notification);
   }
 }

@@ -17,6 +17,7 @@ import { Entity, Column, ManyToMany, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { VoteEntity } from 'src/vote/vote.entity';
 import { NewsEntity } from 'src/news/news.entity';
+import { NotificationEntity } from 'src/notification/notification.entity';
 
 @Entity()
 export class UserEntity extends BaseEntity {
@@ -95,6 +96,11 @@ export class UserEntity extends BaseEntity {
   @IsOptional()
   @OneToMany(() => InvestEntity, (invest) => invest.owner)
   invests: InvestEntity[];
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
+  @OneToMany(() => NotificationEntity, (notification) => notification.owner)
+  notifications: NotificationEntity[];
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()

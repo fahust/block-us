@@ -21,6 +21,6 @@
 //   }
 
 //   async validate(payload: any) {
-//     return await this.userService.get(payload.sub);
+//     return this.userService.get(payload.sub);
 //   }
 // }
