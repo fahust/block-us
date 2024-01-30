@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Request,
   UseGuards,
@@ -32,5 +33,21 @@ export class NewsController {
   })
   get(@Request() req) {
     return this.newsService.get(req.news.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post(':projectId')
+  @ApiOperation({
+    summary: 'Create article',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: NewsEntity,
+  })
+  create(
+    @Body() article: NewsEntity,
+    @Param() { projectId },
+  ): Promise<NewsEntity> {
+    return this.newsService.create(article, projectId);
   }
 }

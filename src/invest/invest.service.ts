@@ -6,7 +6,7 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, QueryRunner } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InvestEntity } from './invest.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { ProjectService } from 'src/project/project.service';
@@ -14,7 +14,7 @@ import dataSource from 'db/data-source';
 import { TransactionReceipt } from 'ethers';
 import { HelperBlockchainService } from 'src/helper/service/helper.blockchain.service';
 import { ConfigService } from '@nestjs/config';
-import { NotificationEntity } from 'src/notification/notification.entity';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class InvestService {
@@ -25,6 +25,7 @@ export class InvestService {
     @Inject(forwardRef(() => ProjectService))
     private projectService: ProjectService,
     private helperBlockchainService: HelperBlockchainService,
+    private notificationService: NotificationService,
     private configService: ConfigService,
   ) {
     this.alchemyKey = this.configService.get('ALCHEMY_KEY');
@@ -168,7 +169,7 @@ export class InvestService {
           ) {
             await queryRunner.manager.delete(InvestEntity, invest.id);
           } else if (tx?.status === 1 && tx?.status === 1) {
-            await this.sendNotification(invest, queryRunner);
+            await this.notificationService.newInvestment(invest, queryRunner);
             await queryRunner.manager.save(InvestEntity, {
               ...invest,
               validation: true,
@@ -184,31 +185,5 @@ export class InvestService {
         await queryRunner.release();
       }
     }
-  }
-
-  private async sendNotification(
-    invest: InvestEntity,
-    queryRunner: QueryRunner,
-  ) {
-    const uniqueInvestors = invest.project.invests?.filter(
-      (i1, index) =>
-        invest.project.invests.findIndex(
-          (i2: InvestEntity) => i1?.owner.id === i2?.owner.id,
-        ) === index,
-    );
-
-    for (const investor of uniqueInvestors) {
-      const notification = new NotificationEntity();
-      notification.owner = investor.owner;
-      notification.project = invest.project;
-      notification.content = `New investment of ${invest.value} wei for project ${invest.project.title}`;
-      await queryRunner.manager.save(NotificationEntity, notification);
-    }
-
-    const notification = new NotificationEntity();
-    notification.owner = invest.project.owner;
-    notification.project = invest.project;
-    notification.content = `New investment of ${invest.value} wei for your project ${invest.project.title}`;
-    await queryRunner.manager.save(NotificationEntity, notification);
   }
 }
