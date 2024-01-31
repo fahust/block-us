@@ -121,6 +121,37 @@ export class NotificationService {
     }
   }
 
+  async newVote(project: ProjectEntity) {
+    if (!dataSource.isInitialized) await dataSource.initialize();
+    const queryRunner = dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const uniqueInvestors = project.invests?.filter(
+        (i1, index) =>
+          project.invests.findIndex(
+            (i2: InvestEntity) => i1?.owner.id === i2?.owner.id,
+          ) === index,
+      );
+
+      for (const investor of uniqueInvestors) {
+        const notification = new NotificationEntity();
+        notification.owner = investor.owner;
+        notification.project = project;
+        notification.content = `New vote for project ${project.title}`;
+        await queryRunner.manager.save(NotificationEntity, notification);
+      }
+
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      console.log(err);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   async save(notification: NotificationEntity): Promise<NotificationEntity> {
     try {
       return this.notificationRepository.save(notification);
