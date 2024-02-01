@@ -1,16 +1,8 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  forwardRef,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult, QueryRunner } from 'typeorm';
 import { NotificationEntity } from './notification.entity';
-import { ProjectService } from 'src/project/project.service';
 import { InvestEntity } from 'src/invest/invest.entity';
-import { NewsEntity } from 'src/news/news.entity';
 import dataSource from 'db/data-source';
 import { ProjectEntity } from 'src/project/project.entity';
 
@@ -19,8 +11,6 @@ export class NotificationService {
   constructor(
     @InjectRepository(NotificationEntity)
     private notificationRepository: Repository<NotificationEntity>,
-    @Inject(forwardRef(() => ProjectService))
-    private projectService: ProjectService,
   ) {}
 
   async get(id: number): Promise<NotificationEntity> {
@@ -91,19 +81,10 @@ export class NotificationService {
   }
 
   async newArticle(project: ProjectEntity) {
-    if (!dataSource.isInitialized) await dataSource.initialize();
-    const queryRunner = dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    const { queryRunner, uniqueInvestors } = await this.startTransaction(
+      project,
+    );
     try {
-      const uniqueInvestors = project.invests?.filter(
-        (i1, index) =>
-          project.invests.findIndex(
-            (i2: InvestEntity) => i1?.owner.id === i2?.owner.id,
-          ) === index,
-      );
-
       for (const investor of uniqueInvestors) {
         const notification = new NotificationEntity();
         notification.owner = investor.owner;
@@ -122,19 +103,10 @@ export class NotificationService {
   }
 
   async newVote(project: ProjectEntity) {
-    if (!dataSource.isInitialized) await dataSource.initialize();
-    const queryRunner = dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    const { queryRunner, uniqueInvestors } = await this.startTransaction(
+      project,
+    );
     try {
-      const uniqueInvestors = project.invests?.filter(
-        (i1, index) =>
-          project.invests.findIndex(
-            (i2: InvestEntity) => i1?.owner.id === i2?.owner.id,
-          ) === index,
-      );
-
       for (const investor of uniqueInvestors) {
         const notification = new NotificationEntity();
         notification.owner = investor.owner;
@@ -150,6 +122,21 @@ export class NotificationService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  private async startTransaction(project) {
+    if (!dataSource.isInitialized) await dataSource.initialize();
+    const queryRunner = dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    const uniqueInvestors = project.invests?.filter(
+      (i1, index) =>
+        project.invests.findIndex(
+          (i2: InvestEntity) => i1?.owner.id === i2?.owner.id,
+        ) === index,
+    );
+    return { queryRunner, uniqueInvestors };
   }
 
   async save(notification: NotificationEntity): Promise<NotificationEntity> {
