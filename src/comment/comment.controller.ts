@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Request,
   UseGuards,
@@ -22,7 +23,7 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @UseGuards(AuthGuard)
-  @Get('')
+  @Get()
   @ApiOperation({
     summary: 'Get current comment with all join',
   })
@@ -32,5 +33,22 @@ export class CommentController {
   })
   get(@Request() req) {
     return this.commentService.get(req.comment.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post(':projectId')
+  @ApiOperation({
+    summary: 'Create invest',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: CommentEntity,
+  })
+  create(
+    @Request() req,
+    @Body() invest: CommentEntity,
+    @Param() { projectId },
+  ): Promise<CommentEntity> {
+    return this.commentService.create(req.user, invest, projectId);
   }
 }
