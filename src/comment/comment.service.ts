@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CommentEntity } from './comment.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { ProjectService } from 'src/project/project.service';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class CommentService {
@@ -11,6 +12,7 @@ export class CommentService {
     @InjectRepository(CommentEntity)
     private commentRepository: Repository<CommentEntity>,
     private projectService: ProjectService,
+    private notificationService: NotificationService,
   ) {}
 
   async get(id: number): Promise<CommentEntity> {
@@ -32,11 +34,13 @@ export class CommentService {
     projectId: number,
   ): Promise<CommentEntity> {
     const project = await this.projectService.get(projectId);
-    return this.save({
+    const commentSaved = await this.save({
       ...comment,
       owner,
       project,
     });
+    await this.notificationService.newComment(project);
+    return commentSaved;
   }
 
   async save(comment: CommentEntity): Promise<CommentEntity> {
