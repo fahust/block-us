@@ -43,6 +43,35 @@ export class CommentService {
     return commentSaved;
   }
 
+  async like(user: UserEntity, commentId: number): Promise<CommentEntity> {
+    const comment = await this.commentRepository
+      .createQueryBuilder('comment')
+      .where('comment.id = :commentId', { commentId })
+      .leftJoinAndMapOne(
+        'project.liked',
+        'project.likes',
+        'liked',
+        'liked.id = :userId',
+        {
+          userId: user.id,
+        },
+      )
+      .leftJoinAndSelect('project.likes', 'likes')
+      .getOneOrFail();
+
+    const alreadyLiked = comment.likes.find((like) => like.id === user.id);
+
+    if (alreadyLiked) {
+      comment.likes = comment.likes.filter((like) => like.id !== user.id);
+      comment.liked = null;
+    } else {
+      comment.likes.push(user);
+      comment.liked = user;
+    }
+    await this.save(comment);
+    return comment;
+  }
+
   async save(comment: CommentEntity): Promise<CommentEntity> {
     return this.commentRepository.save(comment);
   }

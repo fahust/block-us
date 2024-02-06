@@ -41,7 +41,7 @@ export class NewsController {
     summary: 'Create article',
   })
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     type: NewsEntity,
   })
   create(

@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -41,7 +42,7 @@ export class CommentController {
     summary: 'Create invest',
   })
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     type: CommentEntity,
   })
   create(
@@ -50,5 +51,18 @@ export class CommentController {
     @Param() { projectId },
   ): Promise<CommentEntity> {
     return this.commentService.create(req.user, invest, projectId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('like/:commentId')
+  @ApiOperation({
+    summary: 'Like comment',
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    type: CommentEntity,
+  })
+  like(@Request() req, @Param() { commentId }): Promise<CommentEntity> {
+    return this.commentService.like(req.user, commentId);
   }
 }

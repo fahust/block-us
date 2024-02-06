@@ -60,6 +60,10 @@ export class CommentEntity extends BaseEntity {
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
+  liked?: UserEntity;
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @ManyToOne(() => ProjectEntity, (project) => project.comments, {
     orphanedRowAction: 'soft-delete',
   })
