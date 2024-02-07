@@ -52,6 +52,10 @@ export class NewsEntity extends BaseEntity {
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
+  liked?: UserEntity;
+
+  @ApiPropertyOptional({ type: 'object' })
+  @IsOptional()
   @JoinTable()
   @ManyToMany(() => UserEntity, (user) => user.newsLiked, {
     cascade: true,
