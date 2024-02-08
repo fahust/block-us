@@ -9,31 +9,31 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { NewsService } from './news.service';
 import { AuthGuard } from '../authentication/guard/auth.guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { NewsEntity } from './news.entity';
+import { ArticleEntity } from './article.entity';
+import { ArticleService } from './article.service';
 
 @ApiHeader({ name: 'authorization', description: 'Bearer ...' })
-@ApiTags('News')
+@ApiTags('Article')
 @Controller({
-  path: 'news',
+  path: 'article',
   version: '1',
 })
-export class NewsController {
-  constructor(private readonly newsService: NewsService) {}
+export class ArticleController {
+  constructor(private readonly articleService: ArticleService) {}
 
   @UseGuards(AuthGuard)
   @Get()
   @ApiOperation({
-    summary: 'Get current news with all join',
+    summary: 'Get current article with all join',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: NewsEntity,
+    type: ArticleEntity,
   })
   get(@Request() req) {
-    return this.newsService.get(req.news.id);
+    return this.articleService.get(req.article.id);
   }
 
   @UseGuards(AuthGuard)
@@ -43,13 +43,13 @@ export class NewsController {
   })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
-    type: NewsEntity,
+    type: ArticleEntity,
   })
   create(
-    @Body() article: NewsEntity,
+    @Body() article: ArticleEntity,
     @Param() { projectId },
-  ): Promise<NewsEntity> {
-    return this.newsService.create(article, projectId);
+  ): Promise<ArticleEntity> {
+    return this.articleService.create(article, projectId);
   }
 
   @UseGuards(AuthGuard)
@@ -59,9 +59,9 @@ export class NewsController {
   })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
-    type: NewsEntity,
+    type: ArticleEntity,
   })
-  like(@Request() req, @Param() { articleId }): Promise<NewsEntity> {
-    return this.newsService.like(req.user, articleId);
+  like(@Request() req, @Param() { articleId }): Promise<ArticleEntity> {
+    return this.articleService.like(req.user, articleId);
   }
 }
