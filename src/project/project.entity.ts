@@ -186,7 +186,7 @@ export class ProjectEntity extends BaseEntity {
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()
   @OneToMany(() => ArticleEntity, (article) => article.project)
-  article: ArticleEntity[];
+  articles: ArticleEntity[];
 
   @ApiPropertyOptional({ type: 'object' })
   @IsOptional()

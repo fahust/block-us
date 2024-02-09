@@ -39,7 +39,7 @@ export class CommentController {
   @UseGuards(AuthGuard)
   @Post(':projectId')
   @ApiOperation({
-    summary: 'Create invest',
+    summary: 'Create comment',
   })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,

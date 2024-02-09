@@ -85,12 +85,14 @@ export class VoteService {
   }
 
   async votesValueOfProject(projectId: number): Promise<number> {
-    const votes = await this.votesOfProject(projectId);
-
-    return votes.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.value,
-      0,
-    );
+    const { voteSum } = await this.voteRepository
+      .createQueryBuilder('vote')
+      .leftJoin('vote.project', 'project')
+      .where('project.id = :projectId', { projectId })
+      .andWhere('vote.validation = :validation', { validation: true })
+      .select('SUM(vote.value)', 'voteSum')
+      .getRawOne();
+    return +voteSum;
   }
 
   async save(vote: VoteEntity): Promise<VoteEntity> {

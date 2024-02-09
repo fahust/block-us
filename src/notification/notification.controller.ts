@@ -26,7 +26,7 @@ export class NotificationController {
   @UseGuards(AuthGuard)
   @Get('owns')
   @ApiOperation({
-    summary: 'Get my notifications',
+    summary: 'Get all notifications related to current user',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -42,7 +42,7 @@ export class NotificationController {
   @UseGuards(AuthGuard)
   @Get(':id')
   @ApiOperation({
-    summary: 'Get notification',
+    summary: 'Get one notification by id',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -55,7 +55,7 @@ export class NotificationController {
   @UseGuards(AuthGuard)
   @Put()
   @ApiOperation({
-    summary: 'Read notification',
+    summary: 'Change parameter "read" from all notifications related to current user',
   })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,

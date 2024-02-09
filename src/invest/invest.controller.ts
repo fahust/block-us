@@ -27,7 +27,7 @@ export class InvestController {
   @UseGuards(AuthGuard)
   @Get('owns')
   @ApiOperation({
-    summary: 'Get my invests',
+    summary: 'Get my investments',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -43,7 +43,7 @@ export class InvestController {
   @UseGuards(AuthGuard)
   @Get('project/:projectId')
   @ApiOperation({
-    summary: 'Get all invests from a project',
+    summary: 'Get all investments from a project',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -59,7 +59,7 @@ export class InvestController {
   @UseGuards(AuthGuard)
   @Get('project/value/:projectId')
   @ApiOperation({
-    summary: 'Get current value invests from a project',
+    summary: 'Get current value investments from a project',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -72,7 +72,7 @@ export class InvestController {
   @UseGuards(AuthGuard)
   @Get(':id')
   @ApiOperation({
-    summary: 'Get invest',
+    summary: 'Get one investment',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -85,7 +85,7 @@ export class InvestController {
   @UseGuards(AuthGuard)
   @Post(':projectId')
   @ApiOperation({
-    summary: 'Create invest',
+    summary: 'Create an investment previously sent to blockchain and wait for validation in interval',
   })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
@@ -100,7 +100,7 @@ export class InvestController {
   }
 
   @Interval(5000)
-  checkContractIsDeployed() {
+  checkValidationTx() {
     this.investService.checkValidationTx();
   }
 }

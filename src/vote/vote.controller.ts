@@ -80,7 +80,7 @@ export class VoteController {
   @UseGuards(AuthGuard)
   @Post(':projectId')
   @ApiOperation({
-    summary: 'Create vote',
+    summary: 'Create vote previously sent to blockchain and wait for validation in interval',
   })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
@@ -95,7 +95,7 @@ export class VoteController {
   }
 
   @Interval(5000)
-  checkContractIsDeployed() {
+  checkValidationTx() {
     this.voteService.checkValidationTx()
   }
 }
