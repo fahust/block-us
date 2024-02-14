@@ -15,10 +15,16 @@ export class ArticleService {
     private notificationService: NotificationService,
   ) {}
 
-  async get(id: number): Promise<ArticleEntity> {
+  async get(owner: UserEntity, articleId: number): Promise<ArticleEntity> {
     return this.articleRepository
       .createQueryBuilder('article')
-      .where('article.id = :id', { id })
+      .leftJoin('article.project', 'project')
+      .leftJoin('project.owner', 'owner')
+      .where('article.id = :articleId', { articleId })
+      .andWhere('article.visible = :visible OR owner.id = :ownerId', {
+        visible: true,
+        ownerId: owner.id,
+      })
       .getOne();
   }
 
@@ -62,6 +68,22 @@ export class ArticleService {
     }
     await this.save(article);
     return article;
+  }
+
+  async update(
+    owner: UserEntity,
+    article: ArticleEntity,
+  ): Promise<ArticleEntity> {
+    let edit = await this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoin('article.project', 'project')
+      .leftJoin('project.owner', 'owner')
+      .where('article.id = :articleId', { articleId: article.id })
+      .andWhere('owner.id = :ownerId', { ownerId: owner.id })
+      .getOneOrFail();
+    const { title, content, image, visible } = article;
+    edit = { ...edit, title, content, image, visible };
+    return this.save(edit);
   }
 
   async delete(owner: UserEntity, articleId: number): Promise<DeleteResult> {

@@ -5,7 +5,7 @@ items:
     content: '{{lorem.paragraphs}}'
     image: '{{image.avatar}}'
     project: '@project*'
-    public: true
+    visible: true
     isActive: true
     likes: 
       - '@user*'
@@ -14,7 +14,7 @@ items:
     content: '{{lorem.paragraphs}}'
     image: '{{image.avatar}}'
     project: '@project*'
-    public: false
+    visible: false
     isActive: true
     likes: 
       - '@user*'
