@@ -72,6 +72,21 @@ export class CommentService {
     return comment;
   }
 
+  async update(
+    owner: UserEntity,
+    comment: CommentEntity,
+  ): Promise<CommentEntity> {
+    let edit = await this.commentRepository
+      .createQueryBuilder('comment')
+      .leftJoin('comment.owner', 'owner')
+      .where('comment.id = :commentId', { commentId: comment.id })
+      .andWhere('owner.id = :ownerId', { ownerId: owner.id })
+      .getOneOrFail();
+    const { title, content } = comment;
+    edit = { ...edit, title, content };
+    return this.save(edit);
+  }
+
   async delete(owner: UserEntity, commentId: number): Promise<DeleteResult> {
     return this.commentRepository.delete({ owner, id: commentId });
   }

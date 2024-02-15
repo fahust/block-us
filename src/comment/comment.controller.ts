@@ -69,6 +69,22 @@ export class CommentController {
   }
 
   @UseGuards(AuthGuard)
+  @Put(':commentId')
+  @ApiOperation({
+    summary: 'Update comment title, content',
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    type: CommentEntity,
+  })
+  update(
+    @Request() req,
+    @Body() comment: CommentEntity,
+  ): Promise<CommentEntity> {
+    return this.commentService.update(req.user, comment);
+  }
+
+  @UseGuards(AuthGuard)
   @Delete(':commentId')
   @ApiOperation({
     summary: 'Delete comment',
